@@ -5,6 +5,11 @@ Course Project for CPS630
 - Uses Node v20.11.0
 
 
+## Install Instructions
+
+- Run `npm install` in main directory.
+- Run `npm start`
+
 
 
 # Default React README
