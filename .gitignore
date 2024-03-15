@@ -3,6 +3,11 @@
 # virtual environment
 /venv
 
+# django ignores
+/server/app/__pycache__
+/server/app/migrations/__pycache__
+/server/server/__pycache__
+
 # dependencies
 /node_modules
 /.pnp
