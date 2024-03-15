@@ -5,7 +5,24 @@ Course Project for CPS630
 - Uses Node v20.11.0
 
 
+## Install Instructions
 
+- Create a venv in the source folder using `python -m venv venv/.`
+- Activate the venv by running `source venv/bin/activate`
+- Install python requirements using `pip install -r requirements.txt`
+
+- Install Mongo (Fill in Details Later)
+
+- Run `npm install` in main directory.
+
+## Run Project
+
+### Use 3 Terminals
+
+- Run Mongo (Fill in Details Later)
+- Activate the venv by running `source venv/bin/activate`
+- Run Server using `python /server/manage.py runserver`
+- Run `npm start`
 
 # Default React README
 

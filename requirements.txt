@@ -1,0 +1,7 @@
+asgiref==3.7.2
+backports.zoneinfo==0.2.1
+Django==4.2.11
+dnspython==2.6.1
+pymongo==4.6.2
+sqlparse==0.4.4
+typing-extensions==4.10.0
