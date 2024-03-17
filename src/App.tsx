@@ -1,25 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import NavBar from './MainUI/NavBar';
+import styled from 'styled-components';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Home from './MainPage/Home';
+import NewPost from './NewPostPage/NewPost';
 
-function App() {
+const MainWindow = styled.div`
+  display: flex;
+`
+
+
+function App(): JSX.Element {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MainWindow>
+      <Router>
+        <NavBar />
+        <div>
+          <Routes>
+            <Route
+              path="/"
+              element={<Home />}
+            ></Route>
+            <Route
+              path="/newpost"
+              element={<NewPost />}
+            ></Route>
+          </Routes>
+        </div>
+      </Router>
+
+    </MainWindow>
   );
 }
 
