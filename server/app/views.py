@@ -1,6 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 import pymongo
+
+@api_view(['GET'])
+def hello_world(request):
+    return Response({'message': 'Hello, world!'})
 
 # Create your views here.
 def index(request):
