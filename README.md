@@ -8,7 +8,7 @@ Course Project for CPS630
 ## Install Instructions
 
 - Create a venv in the source folder using `python -m venv venv/.`
-- Activate the venv by running `source venv/bin/activate`
+- Activate the venv by running `source venv/bin/activate` OR `./venv/Scripts/activate.bat` (Windows)
 - Install python requirements using `pip install -r requirements.txt`
 
 - Install Mongo (Fill in Details Later)
@@ -20,7 +20,7 @@ Course Project for CPS630
 ### Use 3 Terminals
 
 - Run Mongo (Fill in Details Later)
-- Activate the venv by running `source venv/bin/activate`
+- Activate the venv by running `source venv/bin/activate` OR  `./venv/Scripts/activate.bat` (Windows)
 - Run Server using `python /server/manage.py runserver`
 - Run `npm start`
 
