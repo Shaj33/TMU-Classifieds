@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import Home from './MainPage/Home';
 import NewPost from './NewPostPage/NewPost';
+import Communication from './CommunicationPage/Communication';
 
 const MainWindow = styled.div`
   display: flex;
@@ -29,6 +30,10 @@ function App(): JSX.Element {
             <Route
               path="/newpost"
               element={<NewPost />}
+            ></Route>
+            <Route
+              path="/communication"
+              element={<Communication />}
             ></Route>
           </Routes>
         </div>

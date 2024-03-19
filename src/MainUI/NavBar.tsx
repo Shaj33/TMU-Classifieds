@@ -20,6 +20,11 @@ function NavBar(): JSX.Element {
                     Add a New Post
                 </Link>
             </div>
+            <div>
+                <Link to="/communication">
+                    Messages
+                </Link>
+            </div>
 
         </NavBarWindow>
     )
