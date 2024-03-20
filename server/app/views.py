@@ -13,7 +13,6 @@ def hello_world(request):
 @api_view(['GET'])
 def get_all_lists(request):
 
-    print(request.query_params)
 
     userId = int(request.query_params['userId'])
     friendId = int(request.query_params['friendId'])
@@ -36,8 +35,6 @@ def get_all_lists(request):
 
 @api_view(['GET'])
 def get_most_recent_all(request):
-
-    print(request.query_params)
 
     userId = int(request.query_params['userId'])
     userMessages = []
@@ -72,12 +69,17 @@ def get_most_recent_all(request):
 
 
 @api_view(['POST'])
-def send_txt_message(request):
+def send_txt_message(request):   
+    print(type(request.data['date']))
 
-   
+    new_post = {
+        'userId1': request.data['userId'],
+        'userId2': request.data['friendId'],
+        'content': request.data['content'],
+        'date': dt.fromtimestamp(request.data['date']/1e3)
+    }
 
-    collection.insert_one(mascot_1)
-    del mascot_1["_id"]
+    msgList.insert_one(new_post)
     return Response()
 
 # Create your views here.
