@@ -7,28 +7,45 @@ const CommWindow = styled.div`
     display: flex;
 `
 
+const ChatBox = styled.div<{ $sender: boolean; }>`
+    float: ${props => props.$sender ? 'left' : 'right'};
+    width: 500px;
+    height: 25px;
+    border: 1px solid black;
+`
+
 const Communication = (): JSX.Element => {
 
     const userId = 100
 
-    useEffect(() => {
-        const fetchMessages = async () => {
-            fetch(`http://127.0.0.1:8000/app/get_msgs_list/`)
-                .then((response: any) => { console.log(response)
-                    return response.json()})
-                .then((data:JSON) => {console.log(data)})
-        }
+    const [Messages, setMessages] = useState<any[]>([])
 
-        fetchMessages()
+    useEffect(() => {
+
+        fetch(`http://127.0.0.1:8000/app/get_msgs_list?userId=${userId}`)
+            .then((response: any) => response.json())
+            .then((data: any) => {
+                console.log(data)
+                setMessages(data)
+            })
+
     }, [])
+
+    const test = () => {
+        console.log(Messages)
+    }
 
     const [currentWindow, setCurrentWindow] = useState(0);
 
     return (
         <CommWindow>
-        <ChatList />
-            <div>
-                Hi
+            <ChatList window={currentWindow} />
+            <div style={{width: '100%'}}>
+                {Messages.map((msg, index) => {
+                    return (
+                        <ChatBox key={index} $sender={msg.userId1 === userId}>{msg.content}</ChatBox>
+                    )
+                })}
             </div>
         </CommWindow>
     )
