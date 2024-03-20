@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const NavBarWindow = styled.div`
     height: 100vh;
-    width: 250px;
+    width: 10%;
     padding-top: 40px;
     border-right: 2px solid black;
 `

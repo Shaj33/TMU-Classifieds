@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-import pymongo
 from bson.json_util import dumps
+import pymongo
+from datetime import datetime as dt
 
 @api_view(['GET'])
 def hello_world(request):
@@ -15,9 +16,10 @@ def get_all_lists(request):
     print(request.query_params)
 
     userId = int(request.query_params['userId'])
+    friendId = int(request.query_params['friendId'])
     userMessages = []
 
-    query = { '$or': [{'userId1': userId}, {'userId2': userId}]}
+    query = { '$or': [{'userId1': userId, 'userId2': friendId}, {'userId1': friendId, 'userId2': userId}]}
     queryFields = {'_id': False}
 
     msgs = msgList.find(query, queryFields)
@@ -31,6 +33,43 @@ def get_all_lists(request):
         })
 
     return JsonResponse(list(userMessages), safe=False)
+
+@api_view(['GET'])
+def get_most_recent_all(request):
+
+    print(request.query_params)
+
+    userId = int(request.query_params['userId'])
+    userMessages = []
+
+    query = { '$or': [{'userId1': userId}, {'userId2': userId}] }
+    queryFields = {'_id': False}
+
+    msgs = msgList.find(query, queryFields)
+
+    recent_msg = {}
+
+    for msg in msgs:
+        friend = msg['userId1'] if msg['userId2'] == userId else msg['userId2']
+        if not friend in recent_msg:
+            recent_msg[friend] = msg
+        elif msg['date'] > recent_msg[friend]['date']:
+            recent_msg[friend] = msg
+
+
+    print(recent_msg)
+
+    for msgKey in recent_msg:
+        msg = recent_msg[msgKey]
+        userMessages.append({
+            'content': msg['content'],
+            'userId': userId,
+            'friendId': msgKey,
+            'date': msg['date']
+        })
+
+    return JsonResponse(list(userMessages), safe=False)
+
 
 @api_view(['POST'])
 def send_txt_message(request):
