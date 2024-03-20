@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import pymongo
@@ -12,8 +12,15 @@ def hello_world(request):
 @api_view(['GET'])
 def get_all_lists(request):
 
+    print(request.query_params)
+
+    userId = int(request.query_params['userId'])
     userMessages = []
-    msgs = msgList.find({})
+
+    query = { '$or': [{'userId1': userId}, {'userId2': userId}]}
+    queryFields = {'_id': False}
+
+    msgs = msgList.find(query, queryFields)
 
     for msg in msgs:
         userMessages.append({
@@ -23,9 +30,7 @@ def get_all_lists(request):
             'date': msg['date']
         })
 
-    print(userMessages)
-
-    return Response({'msgs': userMessages})
+    return JsonResponse(list(userMessages), safe=False)
 
 @api_view(['POST'])
 def send_txt_message(request):
