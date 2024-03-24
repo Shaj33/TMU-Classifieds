@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import pymongo
@@ -30,3 +33,23 @@ user_details = collection.find({})
 
 for r in user_details:
     print(r['Name'])
+
+# New login view
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')  # Redirect to your desired page after login
+        else:
+            messages.error(request, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+# New logout view
+def user_logout(request):
+    logout(request)
+    return redirect('index')  # Redirect to your desired page after logout
