@@ -38,8 +38,8 @@ function NewPost(): JSX.Element {
                     <select id='postTypes' value={postType} onChange={(e) => setPostType(e.target.value)}>
                         <option value=''>Select...</option>
                         <option value='wanted'>Item&#40;s&#41; Wanted</option>
-                        <option value='wanted'>Item&#40;s&#41; For Sale</option>
-                        <option value='wanted'>Academic Service</option>
+                        <option value='for sale'>Item&#40;s&#41; For Sale</option>
+                        <option value='services'>Academic Service</option>
                     </select>
                 </div>
                 <div className='post-location'>
