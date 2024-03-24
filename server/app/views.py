@@ -27,12 +27,16 @@ mascot_1={
     "Name": "Sammy"
 }
 
+
+
+
 collection.insert_one(mascot_1)
 
 user_details = collection.find({})
 
 for r in user_details:
     print(r['Name'])
+
 
 # New login view
 def user_login(request):
