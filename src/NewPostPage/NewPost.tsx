@@ -9,10 +9,31 @@ function NewPost(): JSX.Element {
     const [location, setLocation] = useState('');
     const [price, setPrice] = useState('')
 
+    const userId = 100;
+
     
     //Handle submit currently empty right now to prevent errors
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+
+        const postOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: userId,
+                title: title,
+                content: content,
+                type: postType,
+                location: location,
+                price: price,
+                date: Date.now()
+            })
+        }
+
+        fetch(`http://127.0.0.1:8000/app/post_ad/`, postOptions)
+            .then(async (response) => console.log(response))
+
+
         setTitle('');
         setContent('');
         setPostType('');

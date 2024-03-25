@@ -12,7 +12,6 @@ def hello_world(request):
 @api_view(['POST'])
 def post_ad(request):
     new_ad = {
-        'id': uuid.uuid4(),
         'user_id': request.data['userId'],
         'type': request.data['type'],
         'title': request.data['title'],
