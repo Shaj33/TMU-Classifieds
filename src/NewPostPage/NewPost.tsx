@@ -43,11 +43,11 @@ function NewPost(): JSX.Element {
                     </select>
                 </div>
                 <div className='post-location'>
-                    <label>Content: </label>
+                    <label>Location: </label>
                     <textarea value={location} onChange={(e) => setLocation(e.target.value)}></textarea>
                 </div>
                 <div className='post-price'>
-                    <label>Content: </label>
+                    <label>Price: </label>
                     <textarea value={price} onChange={(e) => setPrice(e.target.value)}></textarea>
                 </div>
                 <button type="submit" className='post-button'>Post Ad</button>
