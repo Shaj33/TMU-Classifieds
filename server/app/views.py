@@ -107,7 +107,7 @@ def register(request):
     elif request.method == 'OPTIONS':
         # Handle OPTIONS request (e.g., return allowed methods)
         return Response({'message': 'Allowed methods: POST'}, status=status.HTTP_200_OK)
-        
+
 @api_view(['POST'])
 def user_login(request):
     if request.method == 'POST':

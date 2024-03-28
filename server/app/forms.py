@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 from .models import CustomUser
+from django.contrib.auth.models import User
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True, validators=[RegexValidator(
@@ -10,7 +11,7 @@ class RegistrationForm(UserCreationForm):
     )])
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('username', 'email', 'password1', 'password2')
 
     def clean_email(self):

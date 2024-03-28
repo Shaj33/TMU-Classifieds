@@ -24,9 +24,9 @@ const SignUp: React.FC = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/app/register/', { 
+      const response = await axios.post('http://localhost:8000/app/register/', {
         username: username,
-        email: email, 
+        email: email,
         password1: password,
         password2: confirmPassword
       });
