@@ -9,9 +9,14 @@ import {
 } from "react-router-dom";
 import Home from './MainPage/Home';
 import NewPost from './NewPostPage/NewPost';
+import ViewAds from './ViewAdsPage/ViewAds';
 
 const MainWindow = styled.div`
   display: flex;
+`
+
+const SideWindow = styled.div`
+  width: 100%;
 `
 
 
@@ -20,7 +25,7 @@ function App(): JSX.Element {
     <MainWindow>
       <Router>
         <NavBar />
-        <div>
+        <SideWindow>
           <Routes>
             <Route
               path="/"
@@ -30,8 +35,12 @@ function App(): JSX.Element {
               path="/newpost"
               element={<NewPost />}
             ></Route>
+            <Route
+              path='/viewAds'
+              element={<ViewAds />}>
+            </Route>
           </Routes>
-        </div>
+        </SideWindow>
       </Router>
 
     </MainWindow>
