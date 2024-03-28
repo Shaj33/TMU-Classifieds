@@ -24,13 +24,20 @@ const SignUp: React.FC = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/app/register/', {
-        username: username,
-        email: email,
-        password1: password,
-        password2: confirmPassword
-      });
-      console.log(response.data);
+      const form = new FormData();
+      form.append("username", username);
+      form.append("email", email);
+      form.append("password1", password);
+      form.append("password2", confirmPassword);
+
+      const response = await axios({
+        method: "post",
+        url: "http://localhost:8000/app/register/",
+        data: form,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+
+      console.log(response);
       // Clear form fields
       setUsername('');
       setEmail('');
