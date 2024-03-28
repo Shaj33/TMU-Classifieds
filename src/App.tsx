@@ -9,11 +9,12 @@ import {
 } from "react-router-dom";
 import Home from './MainPage/Home';
 import NewPost from './NewPostPage/NewPost';
+import Login from './Components/Login';
+import SignUp from './Components/SignUp';
 
 const MainWindow = styled.div`
   display: flex;
 `
-
 
 function App(): JSX.Element {
   return (
@@ -30,10 +31,17 @@ function App(): JSX.Element {
               path="/newpost"
               element={<NewPost />}
             ></Route>
+            <Route
+              path="/login"
+              element={<Login />}
+            ></Route>
+            <Route
+              path="/signup"
+              element={<SignUp />}
+            ></Route>
           </Routes>
         </div>
       </Router>
-
     </MainWindow>
   );
 }

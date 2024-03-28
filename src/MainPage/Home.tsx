@@ -1,5 +1,4 @@
 import React from 'react';
-
 //Home page component
 function Home(): JSX.Element {
     return (

@@ -16,11 +16,11 @@ function NavBar(): JSX.Element {
                 <Link to="/">Home</Link>
             </div>
             <div>
-                <Link to="/newpost">
-                    Add a New Post
-                </Link>
+                <Link to="/newpost">Add a New Post</Link>
             </div>
-
+            <div>
+                <Link to="/login">Login</Link>
+            </div>
         </NavBarWindow>
     )
 }
