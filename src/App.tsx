@@ -10,6 +10,7 @@ import {
 import Home from './MainPage/Home';
 import NewPost from './NewPostPage/NewPost';
 import ViewAds from './ViewAdsPage/ViewAds';
+import Communication from './CommunicationPage/Communication';
 
 const MainWindow = styled.div`
   display: flex;
@@ -39,6 +40,10 @@ function App(): JSX.Element {
               path='/viewAds'
               element={<ViewAds />}>
             </Route>
+            <Route
+              path="/communication"
+              element={<Communication />}
+            ></Route>
           </Routes>
         </SideWindow>
       </Router>

@@ -24,6 +24,9 @@ function NavBar(): JSX.Element {
                 <Link to="/viewAds">
                     View Ads
                 </Link>
+                <Link to="/communication">
+                    Messages
+                </Link>
             </div>
 
         </NavBarWindow>
