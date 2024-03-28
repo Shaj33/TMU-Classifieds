@@ -101,7 +101,7 @@ mascot_1={
     "Name": "Sammy"
 }
 
-#collection.insert_one(mascot_1)
+collection.insert_one(mascot_1)
 
 user_details = collection.find({})
 
