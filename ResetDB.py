@@ -1,5 +1,10 @@
 import pymongo
 import datetime
+from faker import Faker
+from faker.providers import currency
+
+fake = Faker()
+fake.add_provider(currency)
 
 client = pymongo.MongoClient('mongodb://localhost:27017')
 client.drop_database('mainDB')
@@ -72,31 +77,48 @@ ad_1={
     'type': 'Wanted',
     'title': 'Looking for textbook',
     'content': 'looking for Intro to CS first edition',
-    'location': 'Toronto'
+    'location': 'Toronto',
+    'picture': None
 }
 
 ad_2={
     'id': 2,
     'user_id': 1,
-    'type': 'For Sale',
+    'type': 'Sale',
     'title': 'Selling calculator',
     'content': 'I want to get rid of my calculator',
     'location': 'Toronto',
-    'price': 5
+    'price': '$5',
+    'picture': None
 }
 
 ad_3={
     'id': 3,
     'user_id': 1,
-    'type': 'Services',
+    'type': 'Academic',
     'title': 'Offering tutoring services',
     'content': 'Willing to teach math and computer science',
     'location': 'Toronto',
-    'price': 15
+    'price': '$15',
+    'picture': None
 }
 
 messages.insert_many(messagesList)
 ads.insert_many([ad_1, ad_2, ad_3])
+
+for _ in range(20):
+
+    ad = {
+        'id': fake.unique.pyint(),
+        'user_id': fake.unique.pyint(),
+        'type': fake.random_element(elements=('Academic', 'Sale', 'Wanted')),
+        'title': fake.sentence(),
+        'content': fake.paragraph(),
+        'location': fake.address(),
+        'price': fake.pricetag(),  # Random price
+        'picture': fake.image_url() if fake.boolean() else None
+    }
+    ads.insert_one(ad)
 
 
 new_db.command("collMod", "messages", validator=message_validator)

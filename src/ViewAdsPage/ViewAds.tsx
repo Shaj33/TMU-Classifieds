@@ -101,11 +101,11 @@ function ViewAds() {
                 const jsonData = await response.json();
                 const filtered = jsonData.filter((item: any) => {
                     if (value === 0) {
-                        return item.Type === 'Sale';
+                        return item.type === 'Sale';
                     } else if (value === 1) {
-                        return item.Type === 'Wanted';
+                        return item.type === 'Wanted';
                     } else if (value === 2) {
-                        return item.Type === 'Academic';
+                        return item.type === 'Academic';
                     }
                     return false;
                 });
