@@ -15,6 +15,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import AdsAccordion from './AdsAccordion';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Popover from '@mui/material/Popover';
+import AdsCardGrid from './AdsCardGrid';
+
 
 
 const SearchBar = () => (
@@ -149,7 +151,7 @@ function ViewAds() {
 
             {[0, 1, 2].map((index) => (
                 <TabPanel index={index} value={value}>
-                    <AdsAccordion adsList={adData} />
+                    <AdsCardGrid adsList={adData} />
                 </TabPanel>
             ))}
 
