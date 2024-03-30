@@ -12,7 +12,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import ClearIcon from '@mui/icons-material/Clear';
-import AdsAccordion from './AdsAccordion';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Popover from '@mui/material/Popover';
 import AdsCardGrid from './AdsCardGrid';
