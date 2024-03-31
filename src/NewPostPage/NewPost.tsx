@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useState, useEffect } from 'react';
 
 //New Post page
 function NewPost(): JSX.Element {
@@ -7,9 +7,39 @@ function NewPost(): JSX.Element {
     const [content, setContent] = useState('');
     const [postType, setPostType] = useState('');
     const [location, setLocation] = useState('');
-    const [price, setPrice] = useState('')
+    const [price, setPrice] = useState('');
+    const [picture, setPicture] = useState('');
+    const [cities, setCities] = useState<string[]>([]);
 
     const userId = 100;
+
+    useEffect(() => {
+        fetchCities();
+    }, []);
+
+    const fetchCities = async () => {
+        try {
+            const response = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    country: 'Canada',
+                    state: 'Ontario'
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const cityNames = data.data || []; // Assuming the response data has a 'data' field containing city names
+                setCities(cityNames);
+            } else {
+                console.error('Failed to fetch city data');
+            }
+        } catch (error) {
+            console.error('Error fetching city data:', error);
+        }
+    };
 
     
     //Handle submit currently empty right now to prevent errors
@@ -26,6 +56,7 @@ function NewPost(): JSX.Element {
                 type: postType,
                 location: location,
                 price: price,
+                picture: picture,
                 date: Date.now()
             })
         }
@@ -39,7 +70,20 @@ function NewPost(): JSX.Element {
         setPostType('');
         setLocation('');
         setPrice('');
+        setPicture('');
     };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result?.toString() || '';
+                setPicture(base64String);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
     //Returns the form to facilitate submission
     return (
@@ -65,11 +109,20 @@ function NewPost(): JSX.Element {
                 </div>
                 <div className='post-location'>
                     <label>Location: </label>
-                    <textarea value={location} onChange={(e) => setLocation(e.target.value)}></textarea>
+                    <select value={location} onChange={(e) => setLocation(e.target.value)}>
+                        <option value=''>Select...</option>
+                        {cities.map(city => (
+                            <option key={city} value={city}>{city}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className='post-price'>
                     <label>Price: </label>
                     <textarea value={price} onChange={(e) => setPrice(e.target.value)}></textarea>
+                </div>
+                <div className='post-picture'>
+                    <label>Picture:</label>
+                    <input type='file' onChange={handleFileChange}></input>
                 </div>
                 <button type="submit" className='post-button'>Post Ad</button>
             </form>

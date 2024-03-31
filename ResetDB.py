@@ -72,17 +72,19 @@ ad_1={
     'type': 'Wanted',
     'title': 'Looking for textbook',
     'content': 'looking for Intro to CS first edition',
-    'location': 'Toronto'
+    'location': 'Toronto',
+    'picture': None
 }
 
 ad_2={
     'id': 2,
     'user_id': 1,
-    'type': 'For Sale',
+    'type': 'Sale',
     'title': 'Selling calculator',
     'content': 'I want to get rid of my calculator',
     'location': 'Toronto',
-    'price': 5
+    'price': 5,
+    'picture': None
 }
 
 ad_3={
@@ -92,7 +94,8 @@ ad_3={
     'title': 'Offering tutoring services',
     'content': 'Willing to teach math and computer science',
     'location': 'Toronto',
-    'price': 15
+    'price': 15,
+    'picture': None
 }
 
 messages.insert_many(messagesList)

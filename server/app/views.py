@@ -17,7 +17,8 @@ def post_ad(request):
         'title': request.data['title'],
         'content': request.data['content'],
         'location': request.data['location'],
-        'price': request.data['price']
+        'price': request.data['price'],
+        'picture': request.data['picture']
     }
 
     ads.insert_one(new_ad)
