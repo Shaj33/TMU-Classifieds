@@ -86,12 +86,19 @@ def send_txt_message(request):
 def index(request):
     return HttpResponse("<h1>Hello and welcome to my <u>Django App</u> project!</h1>")
 
+@api_view(['GET'])
+def get_all_ad_listings(request):
+    ads = ad_collection.find({}, {'_id': False})
+
+    return JsonResponse(list(ads), safe=False)
+
 client = pymongo.MongoClient('mongodb://localhost:27017/mainDB')
 #Define DB Name
 dbname = client['mainDB']
 
 #Define Collection
 collection = dbname['User']
+ad_collection = dbname['Ads']
 
 msgList = dbname['messages']
 

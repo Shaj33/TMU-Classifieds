@@ -21,6 +21,11 @@ function NavBar(): JSX.Element {
                 </Link>
             </div>
             <div>
+                <Link to="/viewAds">
+                    View Ads
+                </Link>
+            </div>
+            <div>
                 <Link to="/communication">
                     Messages
                 </Link>
