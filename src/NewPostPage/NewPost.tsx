@@ -41,6 +41,21 @@ function NewPost(): JSX.Element {
         }
     };
 
+    function getFormattedDate() {
+        const currentDate = new Date(); // Get the current date
+        const months = [
+            'January', 'February', 'March', 'April',
+            'May', 'June', 'July', 'August',
+            'September', 'October', 'November', 'December'
+        ];
+        const monthIndex = currentDate.getMonth(); // Get the month index (0-11)
+        const month = months[monthIndex]; // Get the month name
+        const date = currentDate.getDate(); // Get the date (1-31)
+        const year = currentDate.getFullYear(); // Get the full year
+    
+        return `${month}, ${date}, ${year}`;
+    }
+
     
     //Handle submit currently empty right now to prevent errors
     const handleSubmit = (e: FormEvent) => {
@@ -55,9 +70,9 @@ function NewPost(): JSX.Element {
                 content: content,
                 type: postType,
                 location: location,
-                price: price,
+                price: '$' + price,
                 picture: picture,
-                date: Date.now()
+                date: getFormattedDate()
             })
         }
 
@@ -102,9 +117,9 @@ function NewPost(): JSX.Element {
                     <label>Choose post type</label>
                     <select id='postTypes' value={postType} onChange={(e) => setPostType(e.target.value)}>
                         <option value=''>Select...</option>
-                        <option value='wanted'>Item&#40;s&#41; Wanted</option>
-                        <option value='for sale'>Item&#40;s&#41; For Sale</option>
-                        <option value='services'>Academic Service</option>
+                        <option value='Wanted'>Item&#40;s&#41; Wanted</option>
+                        <option value='Sale'>Item&#40;s&#41; For Sale</option>
+                        <option value='Services'>Academic Service</option>
                     </select>
                 </div>
                 <div className='post-location'>
@@ -117,7 +132,7 @@ function NewPost(): JSX.Element {
                     </select>
                 </div>
                 <div className='post-price'>
-                    <label>Price: </label>
+                    <label>Price&#40;$&#41;: </label>
                     <textarea value={price} onChange={(e) => setPrice(e.target.value)}></textarea>
                 </div>
                 <div className='post-picture'>

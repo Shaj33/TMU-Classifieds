@@ -102,7 +102,7 @@ ad_2={
 ad_3={
     'id': 3,
     'user_id': 1,
-    'type': 'Academic',
+    'type': 'Services',
     'title': 'Offering tutoring services',
     'content': 'Willing to teach math and computer science',
     'location': 'Toronto',
@@ -117,14 +117,14 @@ ads.insert_many([ad_1, ad_2, ad_3])
 for _ in range(20):
     png_file_path = fake.graphic_png_file()
 
-    file_path = tempfile.gettempdir()+'/'+png_file_path if platform.system() == 'Windows' else png_file_path
+    file_path = tempfile.gettempdir()+'/'+png_file_path
     with open(file_path, 'rb') as f:
       png_data = f.read()
 
     ad = {
         'id': fake.unique.pyint(),
         'user_id': fake.unique.pyint(),
-        'type': fake.random_element(elements=('Academic', 'Sale', 'Wanted')),
+        'type': fake.random_element(elements=('Services', 'Sale', 'Wanted')),
         'title': fake.sentence(),
         'content': fake.paragraph(),
         'location': fake.address(),
