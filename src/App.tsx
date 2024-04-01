@@ -9,9 +9,15 @@ import {
 } from "react-router-dom";
 import Home from './MainPage/Home';
 import NewPost from './NewPostPage/NewPost';
+import ViewAds from './ViewAdsPage/ViewAds';
+import Communication from './CommunicationPage/Communication';
 
 const MainWindow = styled.div`
   display: flex;
+`
+
+const SideWindow = styled.div`
+  width: 100%;
 `
 
 
@@ -20,7 +26,7 @@ function App(): JSX.Element {
     <MainWindow>
       <Router>
         <NavBar />
-        <div>
+        <SideWindow>
           <Routes>
             <Route
               path="/"
@@ -30,8 +36,16 @@ function App(): JSX.Element {
               path="/newpost"
               element={<NewPost />}
             ></Route>
+            <Route
+              path='/viewAds'
+              element={<ViewAds />}>
+            </Route>
+            <Route
+              path="/communication"
+              element={<Communication />}
+            ></Route>
           </Routes>
-        </div>
+        </SideWindow>
       </Router>
 
     </MainWindow>
