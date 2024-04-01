@@ -23,7 +23,7 @@ def post_ad(request):
         'picture': request.data['picture']
     }
 
-    ads.insert_one(new_ad)
+    ad_collection.insert_one(new_ad)
     
 @api_view(['GET'])
 def get_all_lists(request):
@@ -126,7 +126,7 @@ mascot_1={
 collection.insert_one(mascot_1)
 
 user_details = collection.find({})
-ad_list = ads.find({})
+ad_list = ad_collection.find({})
 for ad in ad_list:
     print(ad)
 
