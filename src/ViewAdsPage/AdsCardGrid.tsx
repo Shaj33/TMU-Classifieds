@@ -1,21 +1,19 @@
+import AddCommentIcon from '@mui/icons-material/AddComment';
+import MessageIcon from '@mui/icons-material/Message';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import MessageIcon from '@mui/icons-material/Message';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import Box from '@mui/material/Box';
-import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid';
-
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
 type AdsProps = {
     adsList: any[]
 };
-
 
 const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
     <>
@@ -86,7 +84,6 @@ export default function AdsCardGrid({ adsList }: AdsProps) {
     for (let i = 4; i > 0; i--) {
         resultSubarray.push(arr.splice(0, Math.ceil(arr.length / i)));
     }
-    console.log(resultSubarray);
 
     return (
         <Grid container spacing={2}>
