@@ -1,99 +1,67 @@
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { useState, useEffect } from 'react';
-import TabPanel from './TabPanel';
-import TextField from '@mui/material/TextField';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
-import Typography from '@mui/material/Typography';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
-import ClearIcon from '@mui/icons-material/Clear';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import Popover from '@mui/material/Popover';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import TextField from '@mui/material/TextField';
+import Toolbar from '@mui/material/Toolbar';
+import React, { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 import AdsCardGrid from './AdsCardGrid';
+import TabPanel from './TabPanel';
+import FilterButton, { AdFilterOptions } from './FilterButton';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
 import { setFriendId, setPostId } from '../store/messagesSlice';
 
+type SearchBarProps = {
+    setSearch: React.Dispatch<React.SetStateAction<string>>,
+    currentSearchValue: string
+}
 
 
-const SearchBar = () => (
-    <form>
-        <TextField
-            id="search-bar"
-            className="text"
-            onInput={(e) => {
-                //   add search stuff
-            }}
-            placeholder='Search...'
-            size="small"
-            InputProps={{
-                startAdornment: (
-                    <InputAdornment position="start">
-                        <SearchIcon />
-                    </InputAdornment>
-                ),
-                endAdornment: (
-                    <InputAdornment position="end">
-                        <ClearIcon />
-                        {/* Add onClick and hidden/shown */}
-                    </InputAdornment>
-                ),
-            }}
-        />
-    </form>
-);
-
-const FilterButton = () => {
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
+const SearchBar = ({ setSearch, currentSearchValue }: SearchBarProps) => {
     return (
-        <div>
-            <IconButton
-                size="large"
-                edge="end"
-                color="inherit"
-                aria-label="open filter options"
-                onClick={handleClick}
-                sx={{ mr: 2 }}
-            >
-                <FilterListIcon />
-            </IconButton>
-            <Popover
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
+        <form>
+            <TextField
+                id="search-bar"
+                className="text"
+                type='search'
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setSearch(e.target.value);
                 }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
+                value={currentSearchValue}
+                placeholder='Search...'
+                size="small"
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <SearchIcon />
+                        </InputAdornment>
+                    )
                 }}
-            >
-                <Typography sx={{ p: 2 }}>Filter Options</Typography>
-                {/* Add Filter stuff */}
-            </Popover>
-        </div>
-    );
+            />
+        </form>
+    )
 };
+
+
 
 function ViewAds() {
     const [value, setValue] = useState(0);
     const [adData, setAdData] = useState<any[]>([]);
+    const [searchValue, setSearchValue] = useState('');
+    const [filterValues, setFilterValues] = useState<AdFilterOptions>({
+        city: '',
+        dateBefore: '',
+        dateAfter: '',
+        priceLower: '',
+        priceUpper: ''
+    });
+
+    const [filteredAdData, setFilteredAdData] = useState<any[]>([]);
 
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
@@ -112,7 +80,16 @@ function ViewAds() {
                     throw new Error('Failed to fetch data');
                 }
                 const jsonData = await response.json();
-                const filtered = jsonData.filter((item: any) => {
+
+                // reset filter values when switching between tabs
+                setFilterValues({
+                    city: '',
+                    dateBefore: '',
+                    dateAfter: '',
+                    priceLower: '',
+                    priceUpper: ''
+                });
+                const filteredByType = jsonData.filter((item: any) => {
                     if (value === 0) {
                         return item.type === 'Sale';
                     } else if (value === 1) {
@@ -122,7 +99,8 @@ function ViewAds() {
                     }
                     return false;
                 });
-                setAdData(filtered);
+                setAdData(filteredByType);
+                setFilteredAdData(filteredByType);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -130,6 +108,44 @@ function ViewAds() {
 
         fetchData();
     }, [value]);
+
+    useEffect(() => {
+        setFilteredAdData(adData.filter((item: any) => {
+            const lowercaseSearchValue = searchValue.toLowerCase();
+
+            if (item.content.toLowerCase().includes(lowercaseSearchValue) ||
+                item.title.toLowerCase().includes(lowercaseSearchValue) ||
+                item.location.toLowerCase().includes(lowercaseSearchValue)) {
+
+                if (filterValues.city && item.location.toLowerCase() !== filterValues.city.toLowerCase()) {
+                    return false;
+                }
+
+                if (filterValues.dateBefore && dayjs(item.date, 'MMMM DD, YYYY').isAfter(dayjs(filterValues.dateBefore))) {
+                    return false;
+                }
+
+                if (filterValues.dateAfter && dayjs(item.date, 'MMMM DD, YYYY').isBefore(dayjs(filterValues.dateAfter))) {
+                    return false;
+                }
+
+                if (item.price) {
+                    const itemPrice = parseFloat(item.price.replace(/[$,]/g, ''));
+                    if (!isNaN(itemPrice)) {
+                        const priceLower = filterValues.priceLower ? parseFloat(filterValues.priceLower.replace(/[$,]/g, '')) : Number.MIN_SAFE_INTEGER;
+                        const priceUpper = filterValues.priceUpper ? parseFloat(filterValues.priceUpper.replace(/[$,]/g, '')) : Number.MAX_SAFE_INTEGER;
+                        if (itemPrice < priceLower || itemPrice > priceUpper) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }))
+    }, [filterValues, searchValue, adData]);
 
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -146,23 +162,21 @@ function ViewAds() {
                             onChange={handleTabChange}
                             scrollButtons="auto"
                             textColor="inherit"
-                        // indicatorColor="inherit"
-                        // centered
                         >
                             <Tab value={0} label="For Sale" wrapped />
                             <Tab value={1} label="Wanted" wrapped />
                             <Tab value={2} label="Academic Services" wrapped />
                         </Tabs>
                         <Box flexGrow={1} />
-                        <SearchBar />
-                        <FilterButton />
+                        <SearchBar setSearch={setSearchValue} currentSearchValue={searchValue} />
+                        <FilterButton updateFilter={setFilterValues} currentFilter={filterValues} />
                     </Toolbar>
                 </AppBar>
             </Box>
 
             {[0, 1, 2].map((index) => (
                 <TabPanel index={index} value={value}>
-                    <AdsCardGrid adsList={adData} openMessage={OpenMessageToUser} />
+                    <AdsCardGrid adsList={filteredAdData} openMessage={OpenMessageToUser} />
                 </TabPanel>
             ))}
 
