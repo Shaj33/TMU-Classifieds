@@ -1,6 +1,7 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import { Link } from "react-router-dom";
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+import { useAppDispatch } from '../store/hooks';
+import { setFriendId, setPostId } from '../store/messagesSlice';
 
 const MsgListBar = styled.div`
     height: 100vh;
@@ -16,30 +17,36 @@ const MsgList = styled.div`
     border: 1px solid black;
 `
 
-const ChatList = (props: { setCurrentWindow: Dispatch<SetStateAction<number>> }): JSX.Element => {
+const ChatList = (props: { refresh: boolean }): JSX.Element => {
 
     const userId = 100
 
     const [Messages, setMessages] = useState<any[]>([])
+    const dispatch = useAppDispatch()
 
-    const changeWindow = (friendId: any) => {
-        props.setCurrentWindow(friendId)
+    const changeWindow = (vars: {postId: number, friendId: number}) => {
+        dispatch(setPostId(vars.postId))
+        dispatch(setFriendId(vars.friendId))
+
     }
     
     useEffect(() => {
 
         fetch(`http://127.0.0.1:8000/app/get_most_recent_all?userId=${userId}`)
             .then((response: any) => response.json())
-            .then((data: any) => setMessages(data))
+            .then((data: any) => {
+                console.log(data)
+                setMessages(data)
+            })
 
-    }, [])
+    }, [props.refresh])
     
 
     return (
         <MsgListBar>
-            {Messages.map((msg) => {
+            {Messages.map((msg, index) => {
                     return (
-                        <MsgList key={msg.friendId} onClick={() => changeWindow(msg.friendId)}>{msg.friendId}</MsgList>
+                        <MsgList key={index} onClick={() => changeWindow({postId: msg.postId, friendId: msg.friendId})}>{msg.postId + "+" + msg.friendId}</MsgList>
                     )
                 })}
 

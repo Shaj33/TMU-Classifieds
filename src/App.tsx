@@ -11,18 +11,24 @@ import Home from './MainPage/Home';
 import NewPost from './NewPostPage/NewPost';
 import Login from './Components/Login';
 import SignUp from './Components/SignUp';
+import ViewAds from './ViewAdsPage/ViewAds';
 import Communication from './CommunicationPage/Communication';
 
 const MainWindow = styled.div`
   display: flex;
 `
 
+const SideWindow = styled.div`
+  width: 100%;
+`
+
+
 function App(): JSX.Element {
   return (
     <MainWindow>
       <Router>
         <NavBar />
-        <div>
+        <SideWindow>
           <Routes>
             <Route
               path="/"
@@ -41,11 +47,15 @@ function App(): JSX.Element {
               element={<SignUp />}
             ></Route>
             <Route
+              path='/viewAds'
+              element={<ViewAds />}>
+            </Route>
+            <Route
               path="/communication"
               element={<Communication />}
             ></Route>
           </Routes>
-        </div>
+        </SideWindow>
       </Router>
     </MainWindow>
   );
