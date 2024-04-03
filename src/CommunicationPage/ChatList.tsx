@@ -1,6 +1,7 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import { Link } from "react-router-dom";
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+import { useAppDispatch } from '../store/hooks';
+import { setFriendId, setPostId } from '../store/messagesSlice';
 
 const MsgListBar = styled.div`
     height: 100vh;
@@ -16,14 +17,17 @@ const MsgList = styled.div`
     border: 1px solid black;
 `
 
-const ChatList = (props: { setCurrentWindow: Dispatch<SetStateAction<{postId: number, friendId: number}>>, refresh: boolean }): JSX.Element => {
+const ChatList = (props: { refresh: boolean }): JSX.Element => {
 
     const userId = 100
 
     const [Messages, setMessages] = useState<any[]>([])
+    const dispatch = useAppDispatch()
 
-    const changeWindow = (postId: {postId: number, friendId: number}) => {
-        props.setCurrentWindow(postId)
+    const changeWindow = (vars: {postId: number, friendId: number}) => {
+        dispatch(setPostId(vars.postId))
+        dispatch(setFriendId(vars.friendId))
+
     }
     
     useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ChatList from './ChatList';
-
 import styled from 'styled-components';
+import { useAppSelector } from '../store/hooks';
 
 const CommWindow = styled.div`
     width: auto;
@@ -21,20 +21,21 @@ const Communication = (): JSX.Element => {
     const userId = 100
 
     const [Messages, setMessages] = useState<any[]>([])
-    const [currentWindow, setCurrentWindow] = useState<{postId: number, friendId: number}>({postId: 0, friendId: 0});
+    const postId = useAppSelector(state => state.messages.postId)
+    const friendId = useAppSelector(state => state.messages.friendId)
     const [textContent, setTextContent] = useState<string>('')
     const [postTitle, setPostTitle] = useState<string>('')
     const [refreshTab, setRefreshTab] = useState<boolean>(true)
     //const [friendId, setFriendId] = useState<number>(0)
 
     const fetchMessages = () => {
-        fetch(`http://127.0.0.1:8000/app/get_msgs_list?userId=${userId}&friendId=${currentWindow.friendId}&postId=${currentWindow.postId}`)
+        fetch(`http://127.0.0.1:8000/app/get_msgs_list?userId=${userId}&friendId=${friendId}&postId=${postId}`)
             .then((response: any) => response.json())
             .then((data: any) => setMessages(data))
     }
 
     const fetchPost = () => {
-        fetch(`http://127.0.0.1:8000/app/get_single_ad_listing?postId=${currentWindow.postId}`)
+        fetch(`http://127.0.0.1:8000/app/get_single_ad_listing?postId=${postId}`)
             .then((response: any) => response.json())
             .then((data: any) => {
                 data ? setPostTitle(data.title) : setPostTitle('')
@@ -45,7 +46,7 @@ const Communication = (): JSX.Element => {
     useEffect(() => {
         fetchMessages()
         fetchPost()
-    }, [currentWindow])
+    }, [postId, friendId])
 
     const submitText = () => {
         console.log("Submitted")
@@ -55,10 +56,10 @@ const Communication = (): JSX.Element => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 userId: userId,
-                friendId: currentWindow.friendId,
+                friendId: friendId,
                 content: textContent,
                 date: Date.now(),
-                postId: currentWindow.postId,
+                postId: postId,
             })
         }
 
@@ -72,7 +73,7 @@ const Communication = (): JSX.Element => {
 
     return (
         <CommWindow>
-            <ChatList setCurrentWindow={setCurrentWindow} refresh={refreshTab}/>
+            <ChatList refresh={refreshTab}/>
             <div style={{ display: 'block', width: '100%' }}>
                 <div style={{height: '10%', backgroundColor: 'red', border: '1px solid black'}}>
                     <h1>{postTitle}</h1>
@@ -84,7 +85,7 @@ const Communication = (): JSX.Element => {
                         )
                     })}
                 </div>
-                {currentWindow.postId !== 0 && currentWindow.friendId !== 0 && <div>
+                {postId !== 0 && friendId !== 0 && <div>
                     <input type="text" value={textContent} onChange={(e) => setTextContent(e.target.value)} />
                     <button onClick={submitText}>Submit</button>
                 </div>}
