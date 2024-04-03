@@ -1,15 +1,25 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Logout from '../Components/Logout';
 
 const NavBarWindow = styled.div`
     height: 100vh;
     width: 10%;
     padding-top: 40px;
     border-right: 2px solid black;
-`
+`;
 
 function NavBar(): JSX.Element {
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token')); // Check if token exists in local storage
+
+    const handleLogout = () => {
+        // Clear authentication data from local storage
+        localStorage.removeItem('token');
+        // Update isLoggedIn state
+        setIsLoggedIn(false);
+    };
+
     return (
         <NavBarWindow>
             <div>
@@ -18,17 +28,20 @@ function NavBar(): JSX.Element {
             <div>
                 <Link to="/newpost">Add a New Post</Link>
             </div>
+            {isLoggedIn ? ( // Check if user is logged in
+                <div>
+                    <Logout onLogout={handleLogout} /> {/* Render logout button */}
+                </div>
+            ) : (
+                <div>
+                    <Link to="/login">Login</Link> {/* Render login link */}
+                </div>
+            )}
             <div>
-                <Link to="/login">Login</Link>
+                <Link to="/communication">Messages</Link>
             </div>
-            <div>
-                <Link to="/communication">
-                    Messages
-                </Link>
-            </div>
-
         </NavBarWindow>
-    )
+    );
 }
 
-export default NavBar
+export default NavBar;

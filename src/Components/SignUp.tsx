@@ -35,7 +35,7 @@ const SignUp: React.FC = () => {
         url: "http://localhost:8000/app/register/",
         data: form,
         headers: { "Content-Type": "multipart/form-data" },
-      })
+      });
 
       console.log(response);
       // Clear form fields
@@ -44,12 +44,11 @@ const SignUp: React.FC = () => {
       setPassword('');
       setConfirmPassword('');
       // Display success message to the user
-      setSuccessMessage('Registration successful! You can now log in.');
+      setSuccessMessage(`Registration successful! Welcome, ${username}.`);
       setError(''); // Clear any previous error messages
       // Redirect user to the home page after successful registration
-      navigate('/'); // Assuming your home page route is '/'
+      navigate('/login'); // Assuming your home page route is '/'
     } catch (error: any) {
-        //console.error('Registration failed:', error);
         console.log('Error:', error);
       // Handle registration error
       if (error.response && error.response.data) {
