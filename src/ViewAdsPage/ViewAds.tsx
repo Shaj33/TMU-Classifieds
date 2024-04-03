@@ -9,10 +9,12 @@ import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-
 import AdsCardGrid from './AdsCardGrid';
 import TabPanel from './TabPanel';
 import FilterButton, { AdFilterOptions } from './FilterButton';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../store/hooks';
+import { setFriendId, setPostId } from '../store/messagesSlice';
 
 type SearchBarProps = {
     setSearch: React.Dispatch<React.SetStateAction<string>>,
@@ -60,6 +62,15 @@ function ViewAds() {
     });
 
     const [filteredAdData, setFilteredAdData] = useState<any[]>([]);
+
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+
+    const OpenMessageToUser = (ad: any) => {
+        dispatch(setPostId(ad.id))
+        dispatch(setFriendId(ad.user_id))
+        navigate('/communication')
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -165,7 +176,7 @@ function ViewAds() {
 
             {[0, 1, 2].map((index) => (
                 <TabPanel index={index} value={value}>
-                    <AdsCardGrid adsList={filteredAdData} />
+                    <AdsCardGrid adsList={filteredAdData} openMessage={OpenMessageToUser} />
                 </TabPanel>
             ))}
 

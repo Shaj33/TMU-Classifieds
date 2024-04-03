@@ -16,12 +16,14 @@ def get_all_lists(request):
 
     userId = int(request.query_params['userId'])
     friendId = int(request.query_params['friendId'])
+    postId = int(request.query_params['postId'])
     userMessages = []
 
-    query = { '$or': [{'userId1': userId, 'userId2': friendId}, {'userId1': friendId, 'userId2': userId}]}
+    query = { 'postId': postId, '$or': [{'userId1': userId, 'userId2': friendId}, {'userId1': friendId, 'userId2': userId}]}
     queryFields = {'_id': False}
 
     msgs = msgList.find(query, queryFields)
+
 
     for msg in msgs:
         userMessages.append({
@@ -47,22 +49,22 @@ def get_most_recent_all(request):
     recent_msg = {}
 
     for msg in msgs:
+        postId = msg['postId']
         friend = msg['userId1'] if msg['userId2'] == userId else msg['userId2']
-        if not friend in recent_msg:
-            recent_msg[friend] = msg
-        elif msg['date'] > recent_msg[friend]['date']:
-            recent_msg[friend] = msg
-
-
-    print(recent_msg)
+        if not (postId, friend) in recent_msg:
+            recent_msg[(postId, friend)] = msg
+        elif msg['date'] > recent_msg[(postId, friend)]['date']:
+            recent_msg[(postId, friend)] = msg
 
     for msgKey in recent_msg:
         msg = recent_msg[msgKey]
+        postId, friend = msgKey
         userMessages.append({
             'content': msg['content'],
             'userId': userId,
-            'friendId': msgKey,
-            'date': msg['date']
+            'friendId': friend,
+            'date': msg['date'],
+            'postId': postId
         })
 
     return JsonResponse(list(userMessages), safe=False)
@@ -70,13 +72,13 @@ def get_most_recent_all(request):
 
 @api_view(['POST'])
 def send_txt_message(request):   
-    print(type(request.data['date']))
 
     new_post = {
         'userId1': request.data['userId'],
         'userId2': request.data['friendId'],
         'content': request.data['content'],
-        'date': dt.fromtimestamp(request.data['date']/1e3)
+        'date': dt.fromtimestamp(request.data['date']/1e3),
+        'postId': request.data['postId']
     }
 
     msgList.insert_one(new_post)
@@ -91,6 +93,12 @@ def get_all_ad_listings(request):
     ads = ad_collection.find({}, {'_id': False})
 
     return JsonResponse(list(ads), safe=False)
+
+@api_view(['GET'])
+def get_single_ad_listing(request):
+    ad = ad_collection.find_one({'id': int(request.query_params['postId'])}, {'_id': False})
+
+    return JsonResponse(ad, safe=False)
 
 client = pymongo.MongoClient('mongodb://localhost:27017/mainDB')
 #Define DB Name

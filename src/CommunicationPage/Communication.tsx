@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ChatList from './ChatList';
-
 import styled from 'styled-components';
+import { useAppSelector } from '../store/hooks';
 
 const CommWindow = styled.div`
     width: auto;
@@ -21,23 +21,35 @@ const Communication = (): JSX.Element => {
     const userId = 100
 
     const [Messages, setMessages] = useState<any[]>([])
-    const [currentWindow, setCurrentWindow] = useState<number>(0);
+    const postId = useAppSelector(state => state.messages.postId)
+    const friendId = useAppSelector(state => state.messages.friendId)
     const [textContent, setTextContent] = useState<string>('')
+    const [postTitle, setPostTitle] = useState<string>('')
+    const [refreshTab, setRefreshTab] = useState<boolean>(true)
+    //const [friendId, setFriendId] = useState<number>(0)
 
     const fetchMessages = () => {
-        fetch(`http://127.0.0.1:8000/app/get_msgs_list?userId=${userId}&friendId=${currentWindow}`)
+        fetch(`http://127.0.0.1:8000/app/get_msgs_list?userId=${userId}&friendId=${friendId}&postId=${postId}`)
             .then((response: any) => response.json())
             .then((data: any) => setMessages(data))
     }
-    useEffect(() => {
-        fetchMessages()
-    }, [currentWindow])
 
-    const test = () => {
-        console.log(Messages)
+    const fetchPost = () => {
+        fetch(`http://127.0.0.1:8000/app/get_single_ad_listing?postId=${postId}`)
+            .then((response: any) => response.json())
+            .then((data: any) => {
+                data ? setPostTitle(data.title) : setPostTitle('')
+                //data && data.user_id !== userId ? setFriendId(data.user_id) : setFriendId(0)
+        })
     }
 
+    useEffect(() => {
+        fetchMessages()
+        fetchPost()
+    }, [postId, friendId])
+
     const submitText = () => {
+        if (textContent.trim() === '') return;
         console.log("Submitted")
 
         const postOptions = {
@@ -45,9 +57,10 @@ const Communication = (): JSX.Element => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 userId: userId,
-                friendId: currentWindow,
+                friendId: friendId,
                 content: textContent,
-                date: Date.now()
+                date: Date.now(),
+                postId: postId,
             })
         }
 
@@ -55,21 +68,25 @@ const Communication = (): JSX.Element => {
             .then(async (response) => fetchMessages())
         
         setTextContent('')
+        setRefreshTab(!refreshTab)
     }
 
 
     return (
         <CommWindow>
-            <ChatList setCurrentWindow={setCurrentWindow} />
+            <ChatList refresh={refreshTab}/>
             <div style={{ display: 'block', width: '100%' }}>
-                <div style={{ height: '90%'}}>
+                <div style={{height: '10%', backgroundColor: 'red', border: '1px solid black'}}>
+                    <h1>{postTitle}</h1>
+                </div>
+                <div style={{ height: '80%'}}>
                     {Messages.map((msg, index) => {
                         return (
                             <ChatBox key={index} $sender={msg.userId1 === userId}>{msg.content}</ChatBox>
                         )
                     })}
                 </div>
-                {currentWindow !== 0 && <div>
+                {postId !== 0 && friendId !== 0 && <div>
                     <input type="text" value={textContent} onChange={(e) => setTextContent(e.target.value)} />
                     <button onClick={submitText}>Submit</button>
                 </div>}
