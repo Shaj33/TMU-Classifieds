@@ -49,6 +49,7 @@ const Communication = (): JSX.Element => {
     }, [postId, friendId])
 
     const submitText = () => {
+        if (textContent === '') return;
         console.log("Submitted")
 
         const postOptions = {
