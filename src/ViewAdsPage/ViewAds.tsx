@@ -15,6 +15,9 @@ import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Popover from '@mui/material/Popover';
 import AdsCardGrid from './AdsCardGrid';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../store/hooks';
+import { setFriendId, setPostId } from '../store/messagesSlice';
 
 
 
@@ -92,6 +95,15 @@ function ViewAds() {
     const [value, setValue] = useState(0);
     const [adData, setAdData] = useState<any[]>([]);
 
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+
+    const OpenMessageToUser = (ad: any) => {
+        dispatch(setPostId(ad.id))
+        dispatch(setFriendId(ad.user_id))
+        navigate('/communication')
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -150,7 +162,7 @@ function ViewAds() {
 
             {[0, 1, 2].map((index) => (
                 <TabPanel index={index} value={value}>
-                    <AdsCardGrid adsList={adData} />
+                    <AdsCardGrid adsList={adData} openMessage={OpenMessageToUser} />
                 </TabPanel>
             ))}
 

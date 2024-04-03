@@ -14,6 +14,7 @@ import Grid from '@mui/material/Grid';
 
 type AdsProps = {
     adsList: any[]
+    openMessage: (ad:any) => void
 };
 
 
@@ -59,14 +60,9 @@ const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
                             </Typography>
                         </CardContent>
                         <CardActions disableSpacing>
-                            <Tooltip title="Add a Comment">
-                                <IconButton>
-                                    <AddCommentIcon />
-                                </IconButton>
-                            </Tooltip>
                             <Box flexGrow={1} />
                             <Tooltip title="Message the Author">
-                                <IconButton>
+                                <IconButton onClick={() => {columnAds.openMessage(ad)}}>
                                     <MessageIcon />
                                 </IconButton>
                             </Tooltip>
@@ -78,7 +74,7 @@ const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
 );
 
 
-export default function AdsCardGrid({ adsList }: AdsProps) {
+export default function AdsCardGrid({ adsList, openMessage }: AdsProps) {
 
     // Split the ads into 4 sub-arrays
     let resultSubarray: any[][] = [];
@@ -100,7 +96,7 @@ export default function AdsCardGrid({ adsList }: AdsProps) {
                     rowSpacing={2}
                     xs={3}
                 >
-                    <AdCardsColumn adsList={resultSubarray[columnIndex]} />
+                    <AdCardsColumn adsList={resultSubarray[columnIndex]} openMessage={openMessage}/>
                 </Grid>
             ))}
         </Grid>
