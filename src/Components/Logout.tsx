@@ -17,6 +17,7 @@ const Logout: React.FC<LogoutProps> = ({ onLogout }) => {
       await axios.post('http://localhost:8000/app/logout/', { token }); // Send logout request to backend
 
       // Clear authentication data from local storage
+      localStorage.removeItem('username')
       localStorage.removeItem('token');
 
       // Call the onLogout function passed from the parent component

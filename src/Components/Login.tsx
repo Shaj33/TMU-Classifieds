@@ -26,7 +26,7 @@ const Login: React.FC = () => {
 
     //After successful login, set isLoggedIn to true and store authentication data (e.g., token) in local storage
       setIsLoggedIn(true);
-      localStorage.setItem('token', 'your-auth-token'); // Replace 'your-auth-token' with the actual token
+      localStorage.setItem('token', token); // Replace 'your-auth-token' with the actual token
 
       console.log(response.data);
       //navigate('/');

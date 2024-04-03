@@ -117,6 +117,7 @@ def user_login(request):
         user = authenticate(username=username, password=password)
         if user:
             token, _ = Token.objects.get_or_create(user=user)
+            print(Token.objects.get(key=token.key).user_id)
             return Response({'token': token.key, 'username': user.username}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
