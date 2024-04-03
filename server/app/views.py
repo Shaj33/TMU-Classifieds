@@ -4,7 +4,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from bson.json_util import dumps
 import pymongo
-import uuid
 from datetime import datetime as dt
 
 @api_view(['GET'])
@@ -25,6 +24,7 @@ def post_ad(request):
     }
 
     ad_collection.insert_one(new_ad)
+    return Response()
     
 @api_view(['GET'])
 def get_all_lists(request):
