@@ -1,21 +1,21 @@
+import AddCommentIcon from '@mui/icons-material/AddComment';
+import MessageIcon from '@mui/icons-material/Message';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import MessageIcon from '@mui/icons-material/Message';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import Box from '@mui/material/Box';
-import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid';
-
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
 type AdsProps = {
     adsList: any[]
+    openMessage: (ad:any) => void
+    columnNum: number
 };
-
 
 const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
     <>
@@ -59,14 +59,9 @@ const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
                             </Typography>
                         </CardContent>
                         <CardActions disableSpacing>
-                            <Tooltip title="Add a Comment">
-                                <IconButton>
-                                    <AddCommentIcon />
-                                </IconButton>
-                            </Tooltip>
                             <Box flexGrow={1} />
                             <Tooltip title="Message the Author">
-                                <IconButton>
+                                <IconButton onClick={() => {columnAds.openMessage(ad)}}>
                                     <MessageIcon />
                                 </IconButton>
                             </Tooltip>
@@ -78,19 +73,18 @@ const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
 );
 
 
-export default function AdsCardGrid({ adsList }: AdsProps) {
+export default function AdsCardGrid({ adsList, openMessage, columnNum }: AdsProps, ) {
 
     // Split the ads into 4 sub-arrays
     let resultSubarray: any[][] = [];
     let [...arr] = adsList;
-    for (let i = 4; i > 0; i--) {
+    for (let i = columnNum; i > 0; i--) {
         resultSubarray.push(arr.splice(0, Math.ceil(arr.length / i)));
     }
-    console.log(resultSubarray);
 
     return (
-        <Grid container spacing={2}>
-            {[...Array(4)].map((_, columnIndex) => (
+        <Grid container>
+            {[...Array(columnNum)].map((_, columnIndex) => (
                 <Grid
                     key={columnIndex}
                     container
@@ -98,9 +92,9 @@ export default function AdsCardGrid({ adsList }: AdsProps) {
                     justifyContent="flex-start"
                     alignItems="stretch"
                     rowSpacing={2}
-                    xs={3}
+                    xs={true}
                 >
-                    <AdCardsColumn adsList={resultSubarray[columnIndex]} />
+                    <AdCardsColumn adsList={resultSubarray[columnIndex]} openMessage={openMessage} columnNum={columnNum}/>
                 </Grid>
             ))}
         </Grid>
