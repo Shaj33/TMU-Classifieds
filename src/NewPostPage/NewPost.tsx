@@ -5,6 +5,12 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 
@@ -22,6 +28,7 @@ function NewPost(): JSX.Element {
     const [cities, setCities] = useState<string[]>([]);
     const [showAlert, setShowAlert] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [fileName, setFileName] = useState<string>('No file chosen');
 
     useEffect(() => {
         fetchCities();
@@ -29,7 +36,7 @@ function NewPost(): JSX.Element {
 
     const handleChange = (event: SelectChangeEvent) => {
         setPostType(event.target.value as string);
-      };
+    };
 
     // function to get list of cities in Ontario using API
     const fetchCities = async () => {
@@ -68,15 +75,15 @@ function NewPost(): JSX.Element {
         const month = months[monthIndex]; // Get the month name
         const date = currentDate.getDate(); // Get the date (1-31)
         const year = currentDate.getFullYear(); // Get the full year
-    
+
         return `${month}, ${date}, ${year}`;
     }
 
-    
+
     //Handle submit currently empty right now to prevent errors
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        
+
         // Determines if price was entered by user or not
         const priceToSend = priceAvailable ? 'Available Upon Contact' : `$${price}`;
 
@@ -126,12 +133,15 @@ function NewPost(): JSX.Element {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            setFileName(file.name);
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result?.toString() || '';
                 setPicture(base64String);
             };
             reader.readAsDataURL(file);
+        } else {
+            setFileName('No file chosen');
         }
     }
 
@@ -155,14 +165,13 @@ function NewPost(): JSX.Element {
             )}
             <form onSubmit={handleSubmit} className='post'>
                 <div className='post-title'>
-                    <label>Title: </label>
                     <FormControl fullWidth>
-                        <TextField  
-                            label='Required*'
-                            type="text" 
-                            placeholder='Max 100 Characters' 
-                            variant='outlined' 
-                            value={title} 
+                        <TextField
+                            label='Title'
+                            type="text"
+                            placeholder='Max 100 Characters'
+                            variant='outlined'
+                            value={title}
                             onChange={(e) => {
                                 const value = e.target.value;
                                 if (value.length <= 100) {
@@ -170,16 +179,17 @@ function NewPost(): JSX.Element {
                                 }
                             }}
                             inputProps={{ maxLength: 100 }}
+                            required
                         />
                     </FormControl>
                 </div>
+                <br />
                 <div className='post-content'>
-                    <label>Content: </label>
                     <FormControl fullWidth>
-                        <TextField 
-                            label='Required*'
+                        <TextField
+                            label='Content'
                             placeholder='Max 500 Characters'
-                            value={content} 
+                            value={content}
                             onChange={(e) => {
                                 const value = e.target.value;
                                 if (value.length <= 500) {
@@ -187,19 +197,21 @@ function NewPost(): JSX.Element {
                                 }
                             }}
                             inputProps={{ maxLength: 500 }}
+                            required
                         />
                     </FormControl>
                 </div>
+                <br />
                 <div className='post-type'>
-                    <label>Choose post type:</label>
                     <FormControl fullWidth>
-                        <InputLabel id="postTypesLabel">Required*</InputLabel>
-                        <Select 
-                            labelId='postTypesLabel' 
+                        <InputLabel id="postTypesLabel">Choose post type</InputLabel>
+                        <Select
+                            labelId='postTypesLabel'
                             id='postTypes'
-                            value={postType} 
+                            value={postType}
                             label='PostType'
                             onChange={(e) => setPostType(e.target.value)}
+                            required
                         >
                             <MenuItem value='Wanted'>Item&#40;s&#41; Wanted</MenuItem>
                             <MenuItem value='Sale'>Item&#40;s&#41; For Sale</MenuItem>
@@ -207,27 +219,29 @@ function NewPost(): JSX.Element {
                         </Select>
                     </FormControl>
                 </div>
+                <br />
                 <div className='post-location'>
-                    <label>Location: </label>
                     <FormControl fullWidth>
-                        <InputLabel id="postLocationLabel">Required*</InputLabel>
+                        <InputLabel id="postLocationLabel">Location</InputLabel>
                         <Select
                             labelId='postLocationLabel'
                             id='postLocation'
                             value={location}
                             label='PostLocation'
                             onChange={(e) => setLocation(e.target.value)}
+                            required
                         >
                             {cities.map(city => (
-                            <MenuItem key={city} value={city}>{city}</MenuItem>
-                        ))}
+                                <MenuItem key={city} value={city}>{city}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </div>
-                <div className='post-price'>
-                    <label>Price&#40;$&#41;: </label>
-                    <input // Allows user to enter a price
-                        type='text'
+                <br />
+                <Box display="flex" alignItems="center">
+                    <TextField
+                        label="Price ($)"
+                        variant="outlined"
                         value={price}
                         onChange={(e) => {
                             const value = e.target.value;
@@ -237,24 +251,43 @@ function NewPost(): JSX.Element {
                             }
                         }}
                         disabled={priceAvailable} // Disable price input when "Available Upon Contact" is checked
+                        required={!priceAvailable}
                     />
-                    <label>
-                        <input // Allows user to select "Available Upon Contact"
-                            type='checkbox'
-                            checked={priceAvailable}
-                            onChange={() => {
-                                setPriceAvailable(!priceAvailable);
-                                if (priceAvailable) setPrice(''); // Clear price when checking "Available Upon Contact"
-                            }}
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={priceAvailable}
+                                onChange={() => {
+                                    setPriceAvailable(!priceAvailable);
+                                    if (priceAvailable) setPrice(''); // Clear price when checking "Available Upon Contact"
+                                }}
+                            />
+                        }
+                        label="Available Upon Contact"
+                        sx={{ paddingLeft: 2 }}
+                    />
+                </Box>
+                <br />
+                <Box className='post-picture' display="flex" alignItems="center">
+                    <Button
+                        component="label"
+                        variant="contained"
+                        startIcon={<CloudUploadIcon />}
+                    >
+                        Upload a Picture
+                        <input
+                            type="file"
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
                         />
-                        Available Upon Contact
-                    </label>
-                </div>
-                <div className='post-picture'>
-                    <label>Picture:</label>
-                    <input type='file' onChange={handleFileChange}></input>
-                </div>
-                <button type="submit" className='post-button'>Post Ad</button>
+                    </Button>
+                    <Typography variant="body1" sx={{ paddingX: 2 }}>{fileName}</Typography>
+                </Box>
+                <br />
+
+                <Button type="submit" variant="contained">
+                    Post Ad
+                </Button>
             </form>
         </div>
     );
