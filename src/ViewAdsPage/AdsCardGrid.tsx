@@ -64,7 +64,7 @@ const AdCardsColumn = (columnAds: AdsProps,): JSX.Element => (
                     </CardContent>
                     <CardActions disableSpacing>
                         <Box flexGrow={1} />
-                        {columnAds.userId === ad.user_id ?
+                        {columnAds.userId !== 0 ? columnAds.userId === ad.user_id ?
                             <Tooltip title="Archive Post">
                                 <IconButton onClick={() => { columnAds.closeAd(ad) }}>
                                     <ArchiveOutlinedIcon />
@@ -74,7 +74,7 @@ const AdCardsColumn = (columnAds: AdsProps,): JSX.Element => (
                                 <IconButton onClick={() => { columnAds.openMessage(ad) }}>
                                     <MessageIcon />
                                 </IconButton>
-                            </Tooltip>
+                            </Tooltip> : <></>
                         }
                     </CardActions>
                 </Card>
