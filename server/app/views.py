@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -21,12 +22,14 @@ def hello_world(request):
     return Response({'message': 'Hello, world!'})
 
 @api_view(['GET'])
-def get_all_lists(request):
-
-
-    userId = int(request.query_params['userId'])
+def get_msgs_lists(request):
+    userId = Token.objects.get(key=request.query_params['userId']).user_id
     friendId = int(request.query_params['friendId'])
     postId = int(request.query_params['postId'])
+    try:
+        friendUser = User.objects.get(id=friendId).username
+    except:
+        friendUser = friendId
     userMessages = []
 
     query = { 'postId': postId, '$or': [{'userId1': userId, 'userId2': friendId}, {'userId1': friendId, 'userId2': userId}]}
@@ -43,12 +46,14 @@ def get_all_lists(request):
             'date': msg['date']
         })
 
-    return JsonResponse(list(userMessages), safe=False)
+    response = {'user': userId, 'friendUser': friendUser, 'messages': list(userMessages)}
+
+    return JsonResponse(response, safe=False)
 
 @api_view(['GET'])
 def get_most_recent_all(request):
 
-    userId = int(request.query_params['userId'])
+    userId = Token.objects.get(key=request.query_params['userId']).user_id
     userMessages = []
 
     query = { '$or': [{'userId1': userId}, {'userId2': userId}] }
@@ -69,10 +74,16 @@ def get_most_recent_all(request):
     for msgKey in recent_msg:
         msg = recent_msg[msgKey]
         postId, friend = msgKey
+        try: 
+            friendUser = User.objects.get(id=friend).username
+        except:
+            friendUser = friend 
+
         userMessages.append({
             'content': msg['content'],
             'userId': userId,
             'friendId': friend,
+            'friendUser': friendUser,
             'date': msg['date'],
             'postId': postId,
             'postTitle': ad_collection.find_one({'id': postId}, {'_id': False})['title']
@@ -84,8 +95,10 @@ def get_most_recent_all(request):
 @api_view(['POST'])
 def send_txt_message(request):   
 
+    userId = Token.objects.get(key=request.data['userId']).user_id
+
     new_post = {
-        'userId1': request.data['userId'],
+        'userId1': int(userId),
         'userId2': request.data['friendId'],
         'content': request.data['content'],
         'date': dt.fromtimestamp(request.data['date']/1e3),
@@ -121,7 +134,6 @@ def user_login(request):
         user = authenticate(username=username, password=password)
         if user:
             token, _ = Token.objects.get_or_create(user=user)
-            print(Token.objects.get(key=token.key).user_id)
             return Response({'token': token.key, 'username': user.username}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -207,6 +219,8 @@ def delete_ad(request, ad_id):
 @api_view(['GET'])
 def get_single_ad_listing(request):
     ad = ad_collection.find_one({'id': int(request.query_params['postId'])}, {'_id': False})
+    print(ad['user_id'] == Token.objects.get(key=request.query_params['userId']).user_id)
+    ad['isOwner'] = True if ad['user_id'] == Token.objects.get(key=request.query_params['userId']).user_id else False
 
     return JsonResponse(ad, safe=False)
 
