@@ -1,4 +1,12 @@
 import React, { FormEvent, useState, useEffect } from 'react';
+import Alert from '@mui/material/Alert';
+import TextField from '@mui/material/TextField';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+
+
 
 //New Post page
 function NewPost(): JSX.Element {
@@ -11,12 +19,20 @@ function NewPost(): JSX.Element {
     const [priceAvailable, setPriceAvailable] = useState(true); // Set to true by default
     const [picture, setPicture] = useState('');
     const [cities, setCities] = useState<string[]>([]);
+    const [showAlert, setShowAlert] = useState(false);
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+
 
     const userId = 100;
 
     useEffect(() => {
         fetchCities();
     }, []);
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setPostType(event.target.value as string);
+      };
+
     // function to get list of cities in Ontario using API
     const fetchCities = async () => {
         try {
@@ -68,7 +84,7 @@ function NewPost(): JSX.Element {
 
         // Checks if user has not filled in required form fields and sends alert
         if (!title || !content || !location || !postType || priceToSend === '') {
-            alert('Please fill in all required fields.');
+            setShowAlert(true);
             return;
         }
 
@@ -89,8 +105,15 @@ function NewPost(): JSX.Element {
         }
 
         fetch(`http://127.0.0.1:8000/app/post_ad/`, postOptions)
-            .then(async (response) => console.log(response))
-
+            .then(async (response) => {
+                if (response.ok) {
+                    setShowAlert(false); // Hide the error alert if it was previously shown
+                    setShowSuccessAlert(true); // Show the success alert
+                } else {
+                    console.error('Failed to submit post');
+                }
+            })
+            .catch(error => console.error('Error submitting post:', error));
 
         setTitle('');
         setContent('');
@@ -118,32 +141,82 @@ function NewPost(): JSX.Element {
     return (
         <div className='Left'>
             <h2>Add a New Post</h2>
+            {showAlert && (
+                <Alert severity="error">Please fill in all required fields.</Alert>
+            )}
+            {showSuccessAlert && (
+                <Alert severity="success">Post submitted successfully.</Alert>
+            )}
             <form onSubmit={handleSubmit} className='post'>
                 <div className='post-title'>
-                    <label>Title &#40;Required&#41;: </label>
-                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={100}/>
+                    <label>Title: </label>
+                    <FormControl fullWidth>
+                        <TextField  
+                            label='Required*'
+                            type="text" 
+                            placeholder='Max 100 Characters' 
+                            variant='outlined' 
+                            value={title} 
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (value.length <= 100) {
+                                    setTitle(value);
+                                }
+                            }}
+                            inputProps={{ maxLength: 100 }}
+                        />
+                    </FormControl>
                 </div>
                 <div className='post-content'>
-                    <label>Content &#40;Required&#41;: </label>
-                    <textarea value={content} onChange={(e) => setContent(e.target.value)} maxLength={500}></textarea>
+                    <label>Content: </label>
+                    <FormControl fullWidth>
+                        <TextField 
+                            label='Required*'
+                            placeholder='Max 500 Characters'
+                            value={content} 
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (value.length <= 500) {
+                                    setContent(value);
+                                }
+                            }}
+                            inputProps={{ maxLength: 500 }}
+                        />
+                    </FormControl>
                 </div>
                 <div className='post-type'>
-                    <label>Choose post type &#40;Required&#41;</label>
-                    <select id='postTypes' value={postType} onChange={(e) => setPostType(e.target.value)}>
-                        <option value=''>Select...</option>
-                        <option value='Wanted'>Item&#40;s&#41; Wanted</option>
-                        <option value='Sale'>Item&#40;s&#41; For Sale</option>
-                        <option value='Services'>Academic Service</option>
-                    </select>
+                    <label>Choose post type:</label>
+                    <FormControl fullWidth>
+                        <InputLabel id="postTypesLabel">Required*</InputLabel>
+                        <Select 
+                            labelId='postTypesLabel' 
+                            id='postTypes'
+                            value={postType} 
+                            label='PostType'
+                            onChange={(e) => setPostType(e.target.value)}
+                        >
+                            <MenuItem value='Wanted'>Item&#40;s&#41; Wanted</MenuItem>
+                            <MenuItem value='Sale'>Item&#40;s&#41; For Sale</MenuItem>
+                            <MenuItem value='Services'>Academic Service</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
                 <div className='post-location'>
-                    <label>Location &#40;Required&#41;: </label>
-                    <select value={location} onChange={(e) => setLocation(e.target.value)}>
-                        <option value=''>Select...</option>
-                        {cities.map(city => (
-                            <option key={city} value={city}>{city}</option>
+                    <label>Location: </label>
+                    <FormControl fullWidth>
+                        <InputLabel id="postLocationLabel">Required*</InputLabel>
+                        <Select
+                            labelId='postLocationLabel'
+                            id='postLocation'
+                            value={location}
+                            label='PostLocation'
+                            onChange={(e) => setLocation(e.target.value)}
+                        >
+                            {cities.map(city => (
+                            <MenuItem key={city} value={city}>{city}</MenuItem>
                         ))}
-                    </select>
+                        </Select>
+                    </FormControl>
                 </div>
                 <div className='post-price'>
                     <label>Price&#40;$&#41;: </label>
