@@ -25,8 +25,7 @@ const PostTitleP = styled.p`
 
 const ChatList = (props: { closeMenu: React.Dispatch<React.SetStateAction<boolean>> }): JSX.Element => {
 
-    const userId = 100
-
+    const userId = localStorage.getItem('token')
     const [Messages, setMessages] = useState<any[]>([])
     const dispatch = useAppDispatch()
     const postId = useAppSelector(state => state.messages.postId)
@@ -57,7 +56,7 @@ const ChatList = (props: { closeMenu: React.Dispatch<React.SetStateAction<boolea
                         <MsgList $current={msg.postId == postId && msg.friendId == friendId} key={index} onClick={() => changeWindow({postId: msg.postId, friendId: msg.friendId})}>
                             {msg.postTitle}
                             <br/>
-                            {msg.friendId}
+                            {msg.friendUser}
                         </MsgList>
                     )
                 })}
