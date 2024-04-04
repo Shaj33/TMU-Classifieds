@@ -119,7 +119,7 @@ function ViewAds() {
                 } else if (value === 1) {
                     return item.type === 'Wanted';
                 } else if (value === 2) {
-                    return item.type === 'Academic';
+                    return item.type === 'Services';
                 }
                 return false;
             });

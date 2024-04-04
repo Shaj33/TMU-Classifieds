@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [path('',views.index,name='index'),
                 path('hello_world/', views.hello_world),
+                path('post_ad/', views.post_ad),
                 path('get_all_ad_listings', views.get_all_ad_listings),
                 path('get_single_ad_listing', views.get_single_ad_listing),
                 path('close_ad/<int:ad_id>/', views.close_ad),

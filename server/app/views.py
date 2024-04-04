@@ -197,6 +197,25 @@ def get_all_ad_listings(request):
 
     return JsonResponse(ads_response, safe=False)
 
+
+@api_view(['POST'])
+def post_ad(request):
+    new_ad = {
+        'user_id': request.data['userId'],
+        'type': request.data['type'],
+        'title': request.data['title'],
+        'content': request.data['content'],
+        'location': request.data['location'],
+        'price': request.data['price'],
+        'picture': request.data['picture'],
+        'date': request.data['date']
+    }
+
+    ad_collection.insert_one(new_ad)
+    return Response()
+
+
+
 @api_view(['PUT'])
 def close_ad(request, ad_id):
     try:
