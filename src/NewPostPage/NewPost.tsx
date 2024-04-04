@@ -26,17 +26,12 @@ function NewPost(): JSX.Element {
     const [priceAvailable, setPriceAvailable] = useState(true); // Set to true by default
     const [picture, setPicture] = useState('');
     const [cities, setCities] = useState<string[]>([]);
-    const [showAlert, setShowAlert] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [fileName, setFileName] = useState<string>('No file chosen');
 
     useEffect(() => {
         fetchCities();
     }, []);
-
-    const handleChange = (event: SelectChangeEvent) => {
-        setPostType(event.target.value as string);
-    };
 
     // function to get list of cities in Ontario using API
     const fetchCities = async () => {
@@ -87,12 +82,6 @@ function NewPost(): JSX.Element {
         // Determines if price was entered by user or not
         const priceToSend = priceAvailable ? 'Available Upon Contact' : `$${price}`;
 
-        // Checks if user has not filled in required form fields and sends alert
-        if (!title || !content || !location || !postType || priceToSend === '') {
-            setShowAlert(true);
-            return;
-        }
-
         // Preparing the POST request
         const postOptions = {
             method: 'POST',
@@ -112,7 +101,6 @@ function NewPost(): JSX.Element {
         fetch(`http://127.0.0.1:8000/app/post_ad/`, postOptions)
             .then(async (response) => {
                 if (response.ok) {
-                    setShowAlert(false); // Hide the error alert if it was previously shown
                     setShowSuccessAlert(true); // Show the success alert
                 } else {
                     console.error('Failed to submit post');
@@ -157,9 +145,6 @@ function NewPost(): JSX.Element {
     return (
         <div className='Left'>
             <h2>Add a New Post</h2>
-            {showAlert && (
-                <Alert severity="error">Please fill in all required fields.</Alert>
-            )}
             {showSuccessAlert && (
                 <Alert severity="success">Post submitted successfully.</Alert>
             )}
