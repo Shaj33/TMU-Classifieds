@@ -204,7 +204,7 @@ function NewPost(): JSX.Element {
                 <br />
                 <div className='post-type'>
                     <FormControl fullWidth>
-                        <InputLabel id="postTypesLabel">Choose post type</InputLabel>
+                        <InputLabel id="postTypesLabel">Choose post type*</InputLabel>
                         <Select
                             labelId='postTypesLabel'
                             id='postTypes'
@@ -222,7 +222,7 @@ function NewPost(): JSX.Element {
                 <br />
                 <div className='post-location'>
                     <FormControl fullWidth>
-                        <InputLabel id="postLocationLabel">Location</InputLabel>
+                        <InputLabel id="postLocationLabel">Location*</InputLabel>
                         <Select
                             labelId='postLocationLabel'
                             id='postLocation'
