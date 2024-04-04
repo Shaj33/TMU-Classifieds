@@ -96,6 +96,10 @@ function ViewAds() {
                     priceUpper: ''
                 });
                 const filteredByType = jsonData.filter((item: any) => {
+                    if (!item.is_open) {
+                        return false;
+                    }
+                    
                     if (value === 0) {
                         return item.type === 'Sale';
                     } else if (value === 1) {
