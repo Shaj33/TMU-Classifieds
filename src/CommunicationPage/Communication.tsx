@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
 
 const CommWindow = styled.div`
     width: auto;
@@ -25,9 +26,8 @@ const ChatBox = styled.div<{ $sender: boolean; }>`
 `
 
 const TitleBar = styled.div`
-    height: 10%;
+    height: 12%;
     border: 1px solid none;
-    background-color: #1976d2;
     display: flex;
 `
 
@@ -137,7 +137,7 @@ const Communication = (): JSX.Element => {
             <Drawer open={openMessages} onClose={() => toggleOpenMessages(false)}>
                 {<ChatList closeMenu={toggleOpenMessages} />}
             </Drawer>
-            <div style={{ display: 'block', width: '100%', height: '100vh' }}>
+            <div style={{ display: 'block', width: '100%', height: '90vh' }}>
                 <TitleBar>
                     <IconButton onClick={() => toggleOpenMessages(true)}>
                         <MessageIcon />
@@ -148,6 +148,7 @@ const Communication = (): JSX.Element => {
                         <Button variant='contained' color='error' onClick={() => CloseUserAd(postId)}>Close Ad</Button>
                     </Box>}
                 </TitleBar>
+                <Divider component="div" />
                 <Box sx={{ overflow: 'auto', minHeight: '80%', maxHeight: '80%' }}>
                     {Messages.map((msg, index) => {
                         return (

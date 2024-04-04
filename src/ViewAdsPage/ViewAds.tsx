@@ -1,7 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
