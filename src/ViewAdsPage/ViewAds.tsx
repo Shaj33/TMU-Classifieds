@@ -1,7 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -182,7 +181,7 @@ function ViewAds() {
     return (
         <div >
             <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static">
+                <AppBar position="static" color="transparent" elevation={0}>
                     <Toolbar>
                         <Tabs
                             value={value}
@@ -191,6 +190,7 @@ function ViewAds() {
                             textColor="inherit"
                             variant="scrollable"
                             allowScrollButtonsMobile
+                            sx={{flexDirection: "column"}}
                         >
                             <Tab value={0} label="For Sale" wrapped />
                             <Tab value={1} label="Wanted" wrapped />

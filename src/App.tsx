@@ -14,26 +14,19 @@ import SignUp from './Components/SignUp';
 import ViewAds from './ViewAdsPage/ViewAds';
 import Communication from './CommunicationPage/Communication';
 import AdminDashboard from './AdminDashboardPage/AdminDashboard';
-
-const MainWindow = styled.div`
-  display: flex;
-`
-
-const SideWindow = styled.div`
-  width: 100%;
-`
+import Box from '@mui/material/Box';
 
 
 function App(): JSX.Element {
   return (
-    <MainWindow>
+    <div>
+      <NavBar />
       <Router>
-        <NavBar />
-        <SideWindow>
+        <Box sx={{ paddingX: 2, paddingY: 1 }}>
           <Routes>
             <Route
               path="/"
-              element={<Home />}
+              element={<ViewAds />}
             ></Route>
             <Route
               path="/newpost"
@@ -60,9 +53,9 @@ function App(): JSX.Element {
               element={<AdminDashboard />}
             ></Route>
           </Routes>
-        </SideWindow>
+        </Box>
       </Router>
-    </MainWindow>
+    </div>
   );
 }
 
