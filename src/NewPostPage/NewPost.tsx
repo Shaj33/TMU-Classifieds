@@ -14,7 +14,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 
-//New Post page
+// New Post page
 function NewPost(): JSX.Element {
     //  Form attribute hooks
     const userId = localStorage.getItem('token')
@@ -23,7 +23,7 @@ function NewPost(): JSX.Element {
     const [postType, setPostType] = useState('');
     const [location, setLocation] = useState('');
     const [price, setPrice] = useState('');
-    const [priceAvailable, setPriceAvailable] = useState(true); // Set to true by default
+    const [priceAvailable, setPriceAvailable] = useState(true);
     const [picture, setPicture] = useState('');
     const [cities, setCities] = useState<string[]>([]);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -33,7 +33,7 @@ function NewPost(): JSX.Element {
         fetchCities();
     }, []);
 
-    // function to get list of cities in Ontario using API
+    // Function to get list of cities in Ontario using API
     const fetchCities = async () => {
         try {
             const response = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
@@ -48,7 +48,7 @@ function NewPost(): JSX.Element {
             });
             if (response.ok) {
                 const data = await response.json();
-                const cityNames = data.data || []; // Assuming the response data has a 'data' field containing city names
+                const cityNames = data.data || [];
                 setCities(cityNames);
             } else {
                 console.error('Failed to fetch city data');
@@ -75,7 +75,7 @@ function NewPost(): JSX.Element {
     }
 
 
-    //Handle submit currently empty right now to prevent errors
+    // Handles form submission
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
 
@@ -101,13 +101,14 @@ function NewPost(): JSX.Element {
         fetch(`http://127.0.0.1:8000/app/post_ad/`, postOptions)
             .then(async (response) => {
                 if (response.ok) {
-                    setShowSuccessAlert(true); // Show the success alert
+                    setShowSuccessAlert(true); // Show the success alert if post was created successfully
                 } else {
                     console.error('Failed to submit post');
                 }
             })
             .catch(error => console.error('Error submitting post:', error));
-
+        
+        // Resetting form fields
         setTitle('');
         setContent('');
         setPostType('');
@@ -133,7 +134,7 @@ function NewPost(): JSX.Element {
         }
     }
 
-    //Returns a Please Login Page if User is not logged in
+    // Returns a Please Login Page if User is not logged in
     if (!userId) return (
         <div>
             <h1>Please Log In</h1>
@@ -141,7 +142,7 @@ function NewPost(): JSX.Element {
 
     )
 
-    //Returns the form to facilitate submission
+    // Returns the form to facilitate submission
     return (
         <div className='Left'>
             <h2>Add a New Post</h2>
