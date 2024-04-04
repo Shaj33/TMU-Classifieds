@@ -6,12 +6,14 @@ import tempfile
 from faker import Faker
 from faker.providers import currency
 from faker_file.providers.png_file import GraphicPngFileProvider
+from dotenv import dotenv_values
 
 fake = Faker()
 fake.add_provider(currency)
 fake.add_provider(GraphicPngFileProvider)
 
-client = pymongo.MongoClient('mongodb://localhost:27017')
+db_password = dotenv_values(".env")["DB_PASSWORD"]
+client = pymongo.MongoClient(f"mongodb+srv://cpsproj630:{db_password}@maindb.aurr4bv.mongodb.net/?retryWrites=true&w=majority&appName=mainDB")
 client.drop_database('mainDB')
 
 new_db = client['mainDB']

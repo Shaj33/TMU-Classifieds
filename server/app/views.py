@@ -16,6 +16,7 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime as dt
 from django.contrib.auth.models import User
+from dotenv import dotenv_values
 
 @api_view(['GET'])
 def hello_world(request):
@@ -276,7 +277,8 @@ def get_single_ad_listing(request):
 
     return JsonResponse(ad, safe=False)
 
-client = pymongo.MongoClient('mongodb://localhost:27017/mainDB')
+db_password = dotenv_values(".env")["DB_PASSWORD"]
+client = pymongo.MongoClient(f"mongodb+srv://cpsproj630:{db_password}@maindb.aurr4bv.mongodb.net/?retryWrites=true&w=majority&appName=mainDB")
 #Define DB Name
 dbname = client['mainDB']
 
@@ -307,7 +309,7 @@ mascot_1={
     "Name": "Sammy"
 }
 
-collection.insert_one(mascot_1)
+# collection.insert_one(mascot_1)
 
 user_details = collection.find({})
 
