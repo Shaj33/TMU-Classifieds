@@ -109,6 +109,13 @@ const Communication = (): JSX.Element => {
         setRefreshTab(!refreshTab)
     }
 
+    if (!userId) return (
+        <div>
+            <h1>Please Log In</h1>
+        </div>
+
+    )
+
     return (
         <CommWindow>
             <Drawer open={openMessages} onClose={() => toggleOpenMessages(false)}>
