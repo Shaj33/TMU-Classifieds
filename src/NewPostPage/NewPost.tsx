@@ -11,6 +11,7 @@ import FormControl from '@mui/material/FormControl';
 //New Post page
 function NewPost(): JSX.Element {
     //  Form attribute hooks
+    const userId = localStorage.getItem('token')
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [postType, setPostType] = useState('');
@@ -21,9 +22,6 @@ function NewPost(): JSX.Element {
     const [cities, setCities] = useState<string[]>([]);
     const [showAlert, setShowAlert] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-
-
-    const userId = 100;
 
     useEffect(() => {
         fetchCities();
@@ -136,6 +134,14 @@ function NewPost(): JSX.Element {
             reader.readAsDataURL(file);
         }
     }
+
+    //Returns a Please Login Page if User is not logged in
+    if (!userId) return (
+        <div>
+            <h1>Please Log In</h1>
+        </div>
+
+    )
 
     //Returns the form to facilitate submission
     return (

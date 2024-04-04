@@ -200,15 +200,25 @@ def get_all_ad_listings(request):
 
 @api_view(['POST'])
 def post_ad(request):
+    try: 
+        last_id = ad_collection.find({}, {"id": 1}, sort=[('id', -1)]).limit(1).next()
+        new_id = last_id['id'] + 1
+    except:
+        new_id = 1
+
+    user_Id = Token.objects.get(key=request.data['userId']).user_id
+
     new_ad = {
-        'user_id': request.data['userId'],
+        'id': new_id,
+        'user_id': user_Id,
         'type': request.data['type'],
         'title': request.data['title'],
         'content': request.data['content'],
         'location': request.data['location'],
         'price': request.data['price'],
         'picture': request.data['picture'],
-        'date': request.data['date']
+        'date': request.data['date'],
+        'is_open': True
     }
 
     ad_collection.insert_one(new_ad)
