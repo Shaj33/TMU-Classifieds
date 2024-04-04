@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 type AdsProps = {
     adsList: any[]
     openMessage: (ad:any) => void
+    columnNum: number
 };
 
 const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
@@ -72,18 +73,18 @@ const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
 );
 
 
-export default function AdsCardGrid({ adsList, openMessage }: AdsProps) {
+export default function AdsCardGrid({ adsList, openMessage, columnNum }: AdsProps, ) {
 
     // Split the ads into 4 sub-arrays
     let resultSubarray: any[][] = [];
     let [...arr] = adsList;
-    for (let i = 4; i > 0; i--) {
+    for (let i = columnNum; i > 0; i--) {
         resultSubarray.push(arr.splice(0, Math.ceil(arr.length / i)));
     }
 
     return (
-        <Grid container spacing={2}>
-            {[...Array(4)].map((_, columnIndex) => (
+        <Grid container>
+            {[...Array(columnNum)].map((_, columnIndex) => (
                 <Grid
                     key={columnIndex}
                     container
@@ -91,9 +92,9 @@ export default function AdsCardGrid({ adsList, openMessage }: AdsProps) {
                     justifyContent="flex-start"
                     alignItems="stretch"
                     rowSpacing={2}
-                    xs={3}
+                    xs={true}
                 >
-                    <AdCardsColumn adsList={resultSubarray[columnIndex]} openMessage={openMessage}/>
+                    <AdCardsColumn adsList={resultSubarray[columnIndex]} openMessage={openMessage} columnNum={columnNum}/>
                 </Grid>
             ))}
         </Grid>

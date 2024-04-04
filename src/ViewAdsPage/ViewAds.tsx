@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
+import { useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import AdsCardGrid from './AdsCardGrid';
@@ -50,6 +51,11 @@ const SearchBar = ({ setSearch, currentSearchValue }: SearchBarProps) => {
 
 
 function ViewAds() {
+    const theme = useTheme();
+    const isXSmall = useMediaQuery('(max-width:870px)')
+    const isSmall = useMediaQuery('(max-width:1252px)')
+    const isMed = useMediaQuery('(max-width:1624px)')
+    const columnNum = isXSmall ? 1 : isSmall ? 2 : isMed ? 3 : 4
     const [value, setValue] = useState(0);
     const [adData, setAdData] = useState<any[]>([]);
     const [searchValue, setSearchValue] = useState('');
@@ -153,15 +159,17 @@ function ViewAds() {
     };
 
     return (
-        <Container maxWidth={false}>
+        <div >
             <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="static">
                     <Toolbar>
                         <Tabs
                             value={value}
                             onChange={handleTabChange}
-                            scrollButtons="auto"
+                            scrollButtons
                             textColor="inherit"
+                            variant="scrollable"
+                            allowScrollButtonsMobile
                         >
                             <Tab value={0} label="For Sale" wrapped />
                             <Tab value={1} label="Wanted" wrapped />
@@ -176,11 +184,11 @@ function ViewAds() {
 
             {[0, 1, 2].map((index) => (
                 <TabPanel index={index} value={value}>
-                    <AdsCardGrid adsList={filteredAdData} openMessage={OpenMessageToUser} />
+                    <AdsCardGrid adsList={filteredAdData} openMessage={OpenMessageToUser} columnNum={columnNum} />
                 </TabPanel>
             ))}
 
-        </Container>
+        </div>
     );
 }
 
