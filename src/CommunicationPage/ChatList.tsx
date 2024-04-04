@@ -2,32 +2,40 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { useAppDispatch } from '../store/hooks';
 import { setFriendId, setPostId } from '../store/messagesSlice';
+import { useAppSelector } from '../store/hooks';
 
 const MsgListBar = styled.div`
-    height: 100vh;
-    width: 250px;
-    padding-top: 40px;
-    border: 2px solid black;
+    padding: 5px;
 `
 
-const MsgList = styled.div`
+
+const MsgList = styled.div<{ $current: boolean; }>`
+    background-color: ${props => props.$current ? 'gray' : 'white'};;
     display: block;
-    width: 100%;
-    margin-top: 5px;
+    margin: 5px;
+    padding: 5px;
     border: 1px solid black;
+    border-radius: 10px;
+    overflow: hidden;
 `
 
-const ChatList = (props: { refresh: boolean }): JSX.Element => {
+const PostTitleP = styled.p`
+    
+`
+
+const ChatList = (props: { closeMenu: React.Dispatch<React.SetStateAction<boolean>> }): JSX.Element => {
 
     const userId = 100
 
     const [Messages, setMessages] = useState<any[]>([])
     const dispatch = useAppDispatch()
+    const postId = useAppSelector(state => state.messages.postId)
+    const friendId = useAppSelector(state => state.messages.friendId)
 
     const changeWindow = (vars: {postId: number, friendId: number}) => {
         dispatch(setPostId(vars.postId))
         dispatch(setFriendId(vars.friendId))
-
+        props.closeMenu(false)
     }
     
     useEffect(() => {
@@ -39,14 +47,18 @@ const ChatList = (props: { refresh: boolean }): JSX.Element => {
                 setMessages(data)
             })
 
-    }, [props.refresh])
+    }, [])
     
 
     return (
         <MsgListBar>
             {Messages.map((msg, index) => {
                     return (
-                        <MsgList key={index} onClick={() => changeWindow({postId: msg.postId, friendId: msg.friendId})}>{msg.postId + "+" + msg.friendId}</MsgList>
+                        <MsgList $current={msg.postId == postId && msg.friendId == friendId} key={index} onClick={() => changeWindow({postId: msg.postId, friendId: msg.friendId})}>
+                            {msg.postTitle}
+                            <br/>
+                            {msg.friendId}
+                        </MsgList>
                     )
                 })}
 

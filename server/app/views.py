@@ -64,7 +64,8 @@ def get_most_recent_all(request):
             'userId': userId,
             'friendId': friend,
             'date': msg['date'],
-            'postId': postId
+            'postId': postId,
+            'postTitle': ad_collection.find_one({'id': postId}, {'_id': False})['title']
         })
 
     return JsonResponse(list(userMessages), safe=False)

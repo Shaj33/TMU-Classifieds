@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react';
 import ChatList from './ChatList';
 import styled from 'styled-components';
 import { useAppSelector } from '../store/hooks';
+import { useTheme } from '@mui/material';
+import Drawer from '@mui/material/Drawer';
+import MessageIcon from '@mui/icons-material/Message';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 const CommWindow = styled.div`
     width: auto;
@@ -9,16 +16,31 @@ const CommWindow = styled.div`
 `
 
 const ChatBox = styled.div<{ $sender: boolean; }>`
-    float: ${props => props.$sender ? 'left' : 'right'};
-    width: 80%;
-    height: 25px;
+    border-radius: ${props => props.$sender ? '15px 15px 15px 0px' : '15px 15px 0px 15px'};
     margin: 5px;
-    border: 1px solid black;
+    padding: 8px;
+    border: 1px solid none;
+    background-color: ${props => props.$sender ? '#2196f3' : '#3f51b5'};
+    color: white;
+`
+
+const TitleBar = styled.div`
+    height: 10%;
+    border: 1px solid none;
+    background-color: #1976d2;
+    display: flex;
+`
+
+const Title = styled.h1`
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 `
 
 const Communication = (): JSX.Element => {
 
     const userId = 100
+    const theme = useTheme()
 
     const [Messages, setMessages] = useState<any[]>([])
     const postId = useAppSelector(state => state.messages.postId)
@@ -26,7 +48,8 @@ const Communication = (): JSX.Element => {
     const [textContent, setTextContent] = useState<string>('')
     const [postTitle, setPostTitle] = useState<string>('')
     const [refreshTab, setRefreshTab] = useState<boolean>(true)
-    //const [friendId, setFriendId] = useState<number>(0)
+    const [openMessages, toggleOpenMessages] = useState<boolean>(false)
+    const [isOwner, setOwner] = useState<boolean>(false)
 
     const fetchMessages = () => {
         fetch(`http://127.0.0.1:8000/app/get_msgs_list?userId=${userId}&friendId=${friendId}&postId=${postId}`)
@@ -38,9 +61,10 @@ const Communication = (): JSX.Element => {
         fetch(`http://127.0.0.1:8000/app/get_single_ad_listing?postId=${postId}`)
             .then((response: any) => response.json())
             .then((data: any) => {
+                console.log(data)
                 data ? setPostTitle(data.title) : setPostTitle('')
-                //data && data.user_id !== userId ? setFriendId(data.user_id) : setFriendId(0)
-        })
+                data && data.user_id == userId ? setOwner(true) : setOwner(false)
+            })
     }
 
     useEffect(() => {
@@ -66,29 +90,41 @@ const Communication = (): JSX.Element => {
 
         fetch(`http://127.0.0.1:8000/app/send_txt_message`, postOptions)
             .then(async (response) => fetchMessages())
-        
+
         setTextContent('')
         setRefreshTab(!refreshTab)
     }
 
-
     return (
         <CommWindow>
-            <ChatList refresh={refreshTab}/>
-            <div style={{ display: 'block', width: '100%' }}>
-                <div style={{height: '10%', backgroundColor: 'red', border: '1px solid black'}}>
-                    <h1>{postTitle}</h1>
-                </div>
-                <div style={{ height: '80%'}}>
+            <Drawer open={openMessages} onClose={() => toggleOpenMessages(false)}>
+                {<ChatList closeMenu={toggleOpenMessages}/>}
+            </Drawer>
+            <div style={{ display: 'block', width: '100%', height: '100vh' }}>
+                <TitleBar>
+                    <IconButton onClick={() => toggleOpenMessages(true)}>
+                        <MessageIcon />
+                    </IconButton>
+                    <Title>{friendId} - {postTitle}</Title>
+                    <Box flexGrow={1} />
+                    {isOwner && <Box style={{margin: "auto 20px"}}>
+                        <Button variant='contained' color='error'>Close Ad</Button>
+                    </Box>}
+                </TitleBar>
+                <Box sx={{ overflow: 'auto', minHeight: '80%', maxHeight: '80%' }}>
                     {Messages.map((msg, index) => {
                         return (
-                            <ChatBox key={index} $sender={msg.userId1 === userId}>{msg.content}</ChatBox>
+                            <div style={{ display: 'flex' }}>
+                                {msg.userId1 !== userId && <Box flexGrow={1} />}
+                                <ChatBox $sender={msg.userId1 === userId} key={index}>{msg.content}</ChatBox>
+                                {msg.userId1 === userId && <Box flexGrow={1} />}
+                            </div>
                         )
                     })}
-                </div>
-                {postId !== 0 && friendId !== 0 && <div>
-                    <input type="text" value={textContent} onChange={(e) => setTextContent(e.target.value)} />
-                    <button onClick={submitText}>Submit</button>
+                </Box>
+                {postId !== 0 && friendId !== 0 && <div style={{display: 'flex', padding: '10px'}}>
+                    <TextField fullWidth value={textContent} onChange={(e) => setTextContent(e.target.value)} />
+                    <Button onClick={submitText}>Submit</Button>
                 </div>}
             </div>
         </CommWindow>
