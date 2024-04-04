@@ -50,6 +50,7 @@ const Communication = (): JSX.Element => {
     const [refreshTab, setRefreshTab] = useState<boolean>(true)
     const [openMessages, toggleOpenMessages] = useState<boolean>(false)
     const [isOwner, setOwner] = useState<boolean>(false)
+    const [isOpen, setOpen] = useState<boolean>(false)
 
     const fetchMessages = () => {
         console.log(friendId)
@@ -74,11 +75,26 @@ const Communication = (): JSX.Element => {
             .then((data: any) => {
                 setPostTitle(data.title)
                 data.isOwner ? setOwner(true) : setOwner(false)
+                setOpen(data.is_open)
             })
             .catch(() => {
                 setPostTitle('')
                 setOwner(false)
+                setOpen(true)
             })
+    }
+
+    const CloseUserAd = (postId: number) => {
+        try {
+            fetch(`http://127.0.0.1:8000/app/close_ad/${postId}/`, {
+                method: 'PUT'
+            })
+                .then(response => response.json())
+                .then(() => setOpen(false))
+                .catch(() => { throw new Error("Error closing ad") })
+        } catch (error) {
+            console.error("Error closing ad:", error);
+        }
     }
 
     useEffect(() => {
@@ -128,8 +144,8 @@ const Communication = (): JSX.Element => {
                     </IconButton>
                     {postTitle !== '' && <Title>{friendUser} - {postTitle}</Title>}
                     <Box flexGrow={1} />
-                    {isOwner && <Box style={{ margin: "auto 20px" }}>
-                        <Button variant='contained' color='error'>Close Ad</Button>
+                    {isOwner && isOpen && <Box style={{ margin: "auto 20px" }}>
+                        <Button variant='contained' color='error' onClick={() => CloseUserAd(postId)}>Close Ad</Button>
                     </Box>}
                 </TitleBar>
                 <Box sx={{ overflow: 'auto', minHeight: '80%', maxHeight: '80%' }}>
@@ -143,9 +159,14 @@ const Communication = (): JSX.Element => {
                         )
                     })}
                 </Box>
-                {postId !== 0 && friendId !== 0 && <div style={{ display: 'flex', padding: '10px' }}>
-                    <TextField fullWidth value={textContent} onChange={(e) => setTextContent(e.target.value)} />
-                    <Button onClick={submitText}>Submit</Button>
+                {postId !== 0 && friendId !== 0 && <div style={{ display: 'flex', padding: '10px', textAlign: 'center' }}>
+                    {isOpen ? <>
+                        <TextField fullWidth value={textContent} onChange={(e) => setTextContent(e.target.value)} />
+                        <Button onClick={submitText}>Submit</Button>
+                    </> : 
+                    <>
+                        <h1>This Post is Closed</h1>
+                    </>}
                 </div>}
             </div>
         </CommWindow>

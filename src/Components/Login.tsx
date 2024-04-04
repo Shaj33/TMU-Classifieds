@@ -19,7 +19,7 @@ const Login: React.FC = () => {
       }
 
       const response = await axios.post('http://localhost:8000/app/login/', { 'username': username, 'password': password });
-      const { token, username: loggedInUsername } = response.data; // Extract username from response
+      const { token, username: loggedInUsername, userId } = response.data; // Extract username from response
 
       // Store username in local storage or state for later use (optional)
       localStorage.setItem('username', loggedInUsername);
@@ -27,6 +27,7 @@ const Login: React.FC = () => {
     //After successful login, set isLoggedIn to true and store authentication data (e.g., token) in local storage
       setIsLoggedIn(true);
       localStorage.setItem('token', token); // Replace 'your-auth-token' with the actual token
+      localStorage.setItem('userId', userId);
 
       console.log(response.data);
       //navigate('/');

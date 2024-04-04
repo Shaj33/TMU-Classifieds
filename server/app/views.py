@@ -134,7 +134,7 @@ def user_login(request):
         user = authenticate(username=username, password=password)
         if user:
             token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key, 'username': user.username}, status=status.HTTP_200_OK)
+            return Response({'token': token.key, 'username': user.username, 'userId': User.objects.get(username=user.username).id}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     else:
@@ -199,8 +199,16 @@ def delete_user(request, user_id):
 @api_view(['GET'])
 def get_all_ad_listings(request):
     ads = ad_collection.find({}, {'_id': False})
+    ads_response = []
 
-    return JsonResponse(list(ads), safe=False)
+    for ad in ads:
+        try:
+            ad['username'] = User.objects.get(id=ad['user_id']).username
+        except:
+            ad['username'] = ad['user_id']
+        ads_response.append(ad)
+
+    return JsonResponse(ads_response, safe=False)
 
 @api_view(['PUT'])
 def close_ad(request, ad_id):
