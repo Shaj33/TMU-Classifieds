@@ -9,6 +9,7 @@ urlpatterns = [path('',views.index,name='index'),
                 path('close_ad/<int:ad_id>/', views.close_ad),
                 path('delete_ad/<int:ad_id>/', views.delete_ad),
                 path('get_all_users/', views.get_all_users),
+                path('get_is_user_staff/', views.get_is_user_staff),
                 path('delete_user/<int:user_id>/', views.delete_user),
                 path('hello_world/', views.hello_world),          # URL for the hello_world endpoint
                 path('login/', views.user_login, name='login'),   # URL for the login page

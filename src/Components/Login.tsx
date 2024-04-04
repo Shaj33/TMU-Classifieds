@@ -31,6 +31,7 @@ const Login: React.FC = () => {
       console.log(response.data);
       //navigate('/');
       navigate('/', { state: { token } });
+      window.location.href="/";
       // Handle successful login (redirect user, set authentication state, etc.)
     } catch (error) {
       console.error('Login failed:', error);

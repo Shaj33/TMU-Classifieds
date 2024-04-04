@@ -99,7 +99,7 @@ function ViewAds() {
                     if (!item.is_open) {
                         return false;
                     }
-                    
+
                     if (value === 0) {
                         return item.type === 'Sale';
                     } else if (value === 1) {
@@ -165,7 +165,7 @@ function ViewAds() {
     return (
         <div >
             <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static">
+                <AppBar position="static" color="transparent" elevation={0}>
                     <Toolbar>
                         <Tabs
                             value={value}
@@ -174,6 +174,7 @@ function ViewAds() {
                             textColor="inherit"
                             variant="scrollable"
                             allowScrollButtonsMobile
+                            sx={{flexDirection: "column"}}
                         >
                             <Tab value={0} label="For Sale" wrapped />
                             <Tab value={1} label="Wanted" wrapped />
