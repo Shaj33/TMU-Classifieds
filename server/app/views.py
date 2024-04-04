@@ -139,7 +139,7 @@ def user_login(request):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
 @api_view(['POST'])
 def user_logout(request):
     try:
@@ -167,6 +167,19 @@ def get_all_users(request):
     users = User.objects.all()
     data = [{'id': user.id, 'username': user.username, 'email': user.email} for user in users]
     return JsonResponse(data, safe=False)
+
+@api_view(['GET'])
+def get_is_user_staff(request):
+    try:
+        user_id = Token.objects.get(key=request.query_params['userId']).user_id
+        user = User.objects.filter(id=user_id).first()
+        if not user:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+        # return if the user is a staff
+        return JsonResponse({'is_staff': user.is_staff})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
 def delete_user(request, user_id):
