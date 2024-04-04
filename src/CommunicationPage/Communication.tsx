@@ -144,7 +144,7 @@ const Communication = (): JSX.Element => {
                     </IconButton>
                     {postTitle !== '' && <Title>{friendUser} - {postTitle}</Title>}
                     <Box flexGrow={1} />
-                    {isOwner && <Box style={{ margin: "auto 20px" }}>
+                    {isOwner && isOpen && <Box style={{ margin: "auto 20px" }}>
                         <Button variant='contained' color='error' onClick={() => CloseUserAd(postId)}>Close Ad</Button>
                     </Box>}
                 </TitleBar>
