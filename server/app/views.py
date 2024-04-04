@@ -210,6 +210,35 @@ def get_all_ad_listings(request):
 
     return JsonResponse(ads_response, safe=False)
 
+
+@api_view(['POST'])
+def post_ad(request):
+    try: 
+        last_id = ad_collection.find({}, {"id": 1}, sort=[('id', -1)]).limit(1).next()
+        new_id = last_id['id'] + 1
+    except:
+        new_id = 1
+
+    user_Id = Token.objects.get(key=request.data['userId']).user_id
+
+    new_ad = {
+        'id': new_id,
+        'user_id': user_Id,
+        'type': request.data['type'],
+        'title': request.data['title'],
+        'content': request.data['content'],
+        'location': request.data['location'],
+        'price': request.data['price'],
+        'picture': request.data['picture'],
+        'date': request.data['date'],
+        'is_open': True
+    }
+
+    ad_collection.insert_one(new_ad)
+    return Response()
+
+
+
 @api_view(['PUT'])
 def close_ad(request, ad_id):
     try:
@@ -232,6 +261,8 @@ def delete_ad(request, ad_id):
             return JsonResponse({'error': 'Ad not found'}, status=404)
 
         ad_collection.delete_one({'id': ad_id})
+        msgList.delete_many({'postId': ad_id})
+
 
         return JsonResponse({'message': 'Ad deleted successfully'})
     except Exception as e:

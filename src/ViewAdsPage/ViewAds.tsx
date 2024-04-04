@@ -58,6 +58,7 @@ function ViewAds() {
     const [value, setValue] = useState(0);
     const [adData, setAdData] = useState<any[]>([]);
     const [searchValue, setSearchValue] = useState('');
+    const [cities, setCities] = useState<string[]>([]);
     const [filterValues, setFilterValues] = useState<AdFilterOptions>({
         city: '',
         dateBefore: '',
@@ -118,7 +119,7 @@ function ViewAds() {
                 } else if (value === 1) {
                     return item.type === 'Wanted';
                 } else if (value === 2) {
-                    return item.type === 'Academic';
+                    return item.type === 'Services';
                 }
                 return false;
             });
@@ -129,9 +130,36 @@ function ViewAds() {
         }
     };
 
+    // function to get list of cities in Ontario using API
+    const fetchCities = async () => {
+        try {
+            const response = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    country: 'Canada',
+                    state: 'Ontario'
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const cityNames = data.data || []; // Assuming the response data has a 'data' field containing city names
+                setCities(cityNames);
+            } else {
+                console.error('Failed to fetch city data');
+            }
+        } catch (error) {
+            console.error('Error fetching city data:', error);
+        }
+    };
+
     useEffect(() => {
+        fetchCities();
+    }, []);
 
-
+    useEffect(() => {
         fetchData();
     }, [value]);
 
@@ -198,7 +226,7 @@ function ViewAds() {
                         </Tabs>
                         <Box flexGrow={1} />
                         <SearchBar setSearch={setSearchValue} currentSearchValue={searchValue} />
-                        <FilterButton updateFilter={setFilterValues} currentFilter={filterValues} />
+                        <FilterButton updateFilter={setFilterValues} currentFilter={filterValues} cities={cities} />
                     </Toolbar>
                 </AppBar>
             </Box>

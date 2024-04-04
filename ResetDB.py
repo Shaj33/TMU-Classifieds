@@ -83,7 +83,7 @@ messagesList = [{
 
 ad_1={
     'id': 1,
-    'user_id': 1,
+    'user_id': 2,
     'type': 'Wanted',
     'title': 'Looking for textbook',
     'content': 'looking for Intro to CS first edition',
@@ -95,7 +95,7 @@ ad_1={
 
 ad_2={
     'id': 2,
-    'user_id': 1,
+    'user_id': 4,
     'type': 'Sale',
     'title': 'Selling calculator',
     'content': 'I want to get rid of my calculator',
@@ -108,8 +108,8 @@ ad_2={
 
 ad_3={
     'id': 3,
-    'user_id': 1,
-    'type': 'Academic',
+    'user_id': 6,
+    'type': 'Services',
     'title': 'Offering tutoring services',
     'content': 'Willing to teach math and computer science',
     'location': 'Toronto',
@@ -132,7 +132,7 @@ for _ in range(20):
     ad = {
         'id': fake.unique.pyint(),
         'user_id': fake.unique.pyint(),
-        'type': fake.random_element(elements=('Academic', 'Sale', 'Wanted')),
+        'type': fake.random_element(elements=('Services', 'Sale', 'Wanted')),
         'title': fake.sentence(),
         'content': fake.paragraph(),
         'location': fake.address(),
