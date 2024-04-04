@@ -50,7 +50,7 @@ const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
                             <CardMedia
                                 component="img"
                                 height="200"
-                                image={`data:image/png;base64,${ad.picture}`}
+                                image={ad.picture}
                             />
                         )}
                         <CardContent>
