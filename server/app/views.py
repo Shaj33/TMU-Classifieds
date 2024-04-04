@@ -261,6 +261,8 @@ def delete_ad(request, ad_id):
             return JsonResponse({'error': 'Ad not found'}, status=404)
 
         ad_collection.delete_one({'id': ad_id})
+        msgList.delete_many({'postId': ad_id})
+
 
         return JsonResponse({'message': 'Ad deleted successfully'})
     except Exception as e:
