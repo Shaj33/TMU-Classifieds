@@ -40,8 +40,6 @@ const Title = styled.h1`
 const Communication = (): JSX.Element => {
 
     const userId = 100
-    const theme = useTheme()
-
     const [Messages, setMessages] = useState<any[]>([])
     const postId = useAppSelector(state => state.messages.postId)
     const friendId = useAppSelector(state => state.messages.friendId)

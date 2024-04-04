@@ -331,7 +331,6 @@ const FilterButton = ({ updateFilter, currentFilter }: FilterProps) => {
                         id="combo-box-demo"
                         options={cities}
                         fullWidth
-                        sx={{ width: 300 }}
                         value={currentFilter.city || ''}
                         renderInput={(params) => <TextField {...params} label="City" />}
                         onChange={(_, value) => {
@@ -342,16 +341,17 @@ const FilterButton = ({ updateFilter, currentFilter }: FilterProps) => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Ad Created Before Date"
-                            sx={{ width: 300 }}
+                            sx={{ width: '100%', maxWidth:'300px' }}
                             onAccept={(value) => {
                                 updateFilter({ ...currentFilter, dateBefore: value?.toString() || '' });
                             }}
                             value={(currentFilter.dateBefore) ? dayjs(currentFilter.dateBefore) : null}
                         />
                         <br />
+                        <br />
                         <DatePicker
                             label="Ad Created After Date"
-                            sx={{ width: 300 }}
+                            sx={{ width: '100%', maxWidth:'300px' }}
                             onAccept={(value) => {
                                 updateFilter({ ...currentFilter, dateAfter: value?.toString() || '' });
                             }}
@@ -362,7 +362,7 @@ const FilterButton = ({ updateFilter, currentFilter }: FilterProps) => {
                     <br />
 
                     <TextField
-                        sx={{ width: 300 }}
+                        sx={{ width: '100%', maxWidth:'300px' }}
                         type="number"
                         label="Minimum Price"
                         variant="outlined"
@@ -382,7 +382,7 @@ const FilterButton = ({ updateFilter, currentFilter }: FilterProps) => {
                     <br />
                     <br />
                     <TextField
-                        sx={{ width: 300 }}
+                        sx={{ width: '100%', maxWidth:'300px' }}
                         type="number"
                         label="Maximum Price"
                         variant="outlined"
