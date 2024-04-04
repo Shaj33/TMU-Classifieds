@@ -13,6 +13,7 @@ import Login from './Components/Login';
 import SignUp from './Components/SignUp';
 import ViewAds from './ViewAdsPage/ViewAds';
 import Communication from './CommunicationPage/Communication';
+import AdminDashboard from './AdminDashboardPage/AdminDashboard';
 
 const MainWindow = styled.div`
   display: flex;
@@ -53,6 +54,10 @@ function App(): JSX.Element {
             <Route
               path="/communication"
               element={<Communication />}
+            ></Route>
+            <Route
+              path="/dashboard"
+              element={<AdminDashboard />}
             ></Route>
           </Routes>
         </SideWindow>

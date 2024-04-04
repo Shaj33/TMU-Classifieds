@@ -14,6 +14,7 @@ from .forms import RegistrationForm
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime as dt
+from django.contrib.auth.models import User
 
 @api_view(['GET'])
 def hello_world(request):
@@ -148,11 +149,60 @@ def sensitive_endpoint(request):
 def public_endpoint(request):
     # Public endpoint logic
     return Response({'message': 'This is a public endpoint'}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_all_users(request):
+    users = User.objects.all()
+    data = [{'id': user.id, 'username': user.username, 'email': user.email} for user in users]
+    return JsonResponse(data, safe=False)
+
+@api_view(['DELETE'])
+def delete_user(request, user_id):
+    try:
+        # Check if the user exists
+        user = User.objects.filter(id=user_id).first()
+        if not user:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+        # Delete the user
+        user.delete()
+
+        return JsonResponse({'message': 'User deleted successfully'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
 @api_view(['GET'])
 def get_all_ad_listings(request):
     ads = ad_collection.find({}, {'_id': False})
 
     return JsonResponse(list(ads), safe=False)
+
+@api_view(['PUT'])
+def close_ad(request, ad_id):
+    try:
+        ad = ad_collection.find_one({'id': ad_id})
+        if not ad:
+            return JsonResponse({'error': 'Ad not found'}, status=404)
+
+        ad_collection.update_one({'id': ad_id}, {'$set': {'is_open': False}})
+
+        return JsonResponse({'message': 'Ad closed Successfully'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@api_view(['DELETE'])
+def delete_ad(request, ad_id):
+    try:
+        ad = ad_collection.find_one({'id': ad_id})
+        if not ad:
+            return JsonResponse({'error': 'Ad not found'}, status=404)
+
+        ad_collection.delete_one({'id': ad_id})
+
+        return JsonResponse({'message': 'Ad deleted successfully'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 @api_view(['GET'])
 def get_single_ad_listing(request):

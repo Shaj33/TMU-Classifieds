@@ -89,7 +89,8 @@ ad_1={
     'content': 'looking for Intro to CS first edition',
     'location': 'Toronto',
     'picture': None,
-    'date': 'January 1, 2024'
+    'date': 'January 1, 2024',
+    'is_open': True
 }
 
 ad_2={
@@ -101,7 +102,8 @@ ad_2={
     'location': 'Toronto',
     'price': '$5',
     'picture': None,
-    'date': 'November 11, 2020'
+    'date': 'November 11, 2020',
+    'is_open': True
 }
 
 ad_3={
@@ -113,7 +115,8 @@ ad_3={
     'location': 'Toronto',
     'price': '$15',
     'picture': None,
-    'date': 'October 12, 2010'
+    'date': 'October 12, 2010',
+    'is_open': True
 }
 
 messages.insert_many(messagesList)
@@ -122,7 +125,7 @@ ads.insert_many([ad_1, ad_2, ad_3])
 for _ in range(20):
     png_file_path = fake.graphic_png_file()
 
-    file_path = tempfile.gettempdir()+'/'+png_file_path if platform.system() == 'Windows' else png_file_path
+    file_path = tempfile.gettempdir()+'/'+png_file_path
     with open(file_path, 'rb') as f:
       png_data = f.read()
 
@@ -135,7 +138,8 @@ for _ in range(20):
         'location': fake.address(),
         'date': fake.date_time_this_decade(before_now=True, after_now=False).strftime("%B %d, %Y"),
         'price': fake.pricetag(),  # Random price
-        'picture': base64.b64encode(png_data).decode('utf-8') if fake.boolean() else None
+        'picture': base64.b64encode(png_data).decode('utf-8') if fake.boolean() else None,
+        'is_open': fake.boolean(chance_of_getting_true=80),
     }
     ads.insert_one(ad)
 

@@ -10,7 +10,7 @@ const NavBarWindow = styled.div`
 `;
 
 function NavBar(): JSX.Element {
-    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token')); // Check if token exists in local storage
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem('token')); // Check if token exists in local storage
 
     const handleLogout = () => {
         // Clear authentication data from local storage
@@ -44,6 +44,11 @@ function NavBar(): JSX.Element {
             <div>
                 <Link to="/communication">
                     Messages
+                </Link>
+            </div>
+            <div>
+                <Link to="/dashboard">
+                    Admin Dashboard
                 </Link>
             </div>
         </NavBarWindow>
