@@ -1,5 +1,6 @@
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import MessageIcon from '@mui/icons-material/Message';
+import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -13,67 +14,77 @@ import Typography from '@mui/material/Typography';
 
 type AdsProps = {
     adsList: any[]
-    openMessage: (ad:any) => void
+    openMessage: (ad: any) => void
+    closeAd: (ad: any) => void
     columnNum: number
+    userId: number
 };
 
-const AdCardsColumn = (columnAds: AdsProps): JSX.Element => (
+const AdCardsColumn = (columnAds: AdsProps,): JSX.Element => (
     <>
         {columnAds.adsList.map((ad, index) => (
             <Grid item key={index}>
                 <Card sx={{ maxWidth: 345 }}>
-                        <CardHeader
-                            title={
-                                ad.title
-                            }
-                            subheader={
+                    <CardHeader
+                        title={
+                            ad.title
+                        }
+                        subheader={
+                            <Grid
+                                container
+                                direction="column"
+                                alignItems="flex-start"
+                            >
+                                <Typography>{ad.username}</Typography>
                                 <Grid
                                     container
-                                    direction="column"
-                                    alignItems="flex-start"
+                                    direction="row"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    marginBottom={1}
                                 >
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                        marginBottom={1}
-                                    >
-                                        <Typography>{ad.date}</Typography>
-                                        <Typography>{ad.price}</Typography>
-                                    </Grid>
-                                    <Typography variant='subtitle2'>{ad.location}</Typography>
+                                    <Typography>{ad.date}</Typography>
+                                    <Typography>{ad.price}</Typography>
                                 </Grid>
-                            }
+                                <Typography variant='subtitle2'>{ad.location}</Typography>
+                            </Grid>
+                        }
+                    />
+                    {ad.picture && (
+                        <CardMedia
+                            component="img"
+                            height="200"
+                            image={`data:image/png;base64,${ad.picture}`}
                         />
-                        {ad.picture && (
-                            <CardMedia
-                                component="img"
-                                height="200"
-                                image={`data:image/png;base64,${ad.picture}`}
-                            />
-                        )}
-                        <CardContent>
-                            <Typography variant="body2" color="text.secondary">
-                                {ad.content}
-                            </Typography>
-                        </CardContent>
-                        <CardActions disableSpacing>
-                            <Box flexGrow={1} />
+                    )}
+                    <CardContent>
+                        <Typography variant="body2" color="text.secondary">
+                            {ad.content}
+                        </Typography>
+                    </CardContent>
+                    <CardActions disableSpacing>
+                        <Box flexGrow={1} />
+                        {columnAds.userId === ad.user_id ?
+                            <Tooltip title="Archive Post">
+                                <IconButton onClick={() => { columnAds.closeAd(ad) }}>
+                                    <ArchiveOutlinedIcon />
+                                </IconButton>
+                            </Tooltip> :
                             <Tooltip title="Message the Author">
-                                <IconButton onClick={() => {columnAds.openMessage(ad)}}>
+                                <IconButton onClick={() => { columnAds.openMessage(ad) }}>
                                     <MessageIcon />
                                 </IconButton>
                             </Tooltip>
-                        </CardActions>
-                    </Card>
+                        }
+                    </CardActions>
+                </Card>
             </Grid>
         ))}
     </>
 );
 
 
-export default function AdsCardGrid({ adsList, openMessage, columnNum }: AdsProps, ) {
+export default function AdsCardGrid({ adsList, openMessage, closeAd, columnNum }: AdsProps,) {
 
     // Split the ads into 4 sub-arrays
     let resultSubarray: any[][] = [];
@@ -81,6 +92,9 @@ export default function AdsCardGrid({ adsList, openMessage, columnNum }: AdsProp
     for (let i = columnNum; i > 0; i--) {
         resultSubarray.push(arr.splice(0, Math.ceil(arr.length / i)));
     }
+
+    let isUserId = localStorage.getItem("userId")
+    let userId = isUserId ? parseInt(isUserId) : 0
 
     return (
         <Grid container>
@@ -94,7 +108,7 @@ export default function AdsCardGrid({ adsList, openMessage, columnNum }: AdsProp
                     rowSpacing={2}
                     xs={true}
                 >
-                    <AdCardsColumn adsList={resultSubarray[columnIndex]} openMessage={openMessage} columnNum={columnNum}/>
+                    <AdCardsColumn adsList={resultSubarray[columnIndex]} openMessage={openMessage} closeAd={closeAd} columnNum={columnNum} userId={userId} />
                 </Grid>
             ))}
         </Grid>

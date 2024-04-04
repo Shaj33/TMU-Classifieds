@@ -78,43 +78,60 @@ function ViewAds() {
         navigate('/communication')
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://127.0.0.1:8000/app/get_all_ad_listings');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-                const jsonData = await response.json();
+    const CloseUserAd = (ad: any) => {
+        try {
+            const response = fetch(`http://127.0.0.1:8000/app/close_ad/${ad.id}/`, {
+                method: 'PUT'
+            })
+                .then(response => response.json())
+                .catch(() => { throw new Error("Error closing ad") })
 
-                // reset filter values when switching between tabs
-                setFilterValues({
-                    city: '',
-                    dateBefore: '',
-                    dateAfter: '',
-                    priceLower: '',
-                    priceUpper: ''
-                });
-                const filteredByType = jsonData.filter((item: any) => {
-                    if (!item.is_open) {
-                        return false;
-                    }
-                    
-                    if (value === 0) {
-                        return item.type === 'Sale';
-                    } else if (value === 1) {
-                        return item.type === 'Wanted';
-                    } else if (value === 2) {
-                        return item.type === 'Academic';
-                    }
-                    return false;
-                });
-                setAdData(filteredByType);
-                setFilteredAdData(filteredByType);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            fetchData();
+        } catch (error) {
+            console.error("Error closing ad:", error);
+        }
+    }
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/app/get_all_ad_listings');
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
             }
-        };
+            const jsonData = await response.json();
+            console.log(jsonData)
+
+            // reset filter values when switching between tabs
+            setFilterValues({
+                city: '',
+                dateBefore: '',
+                dateAfter: '',
+                priceLower: '',
+                priceUpper: ''
+            });
+            const filteredByType = jsonData.filter((item: any) => {
+                if (!item.is_open) {
+                    return false;
+                }
+
+                if (value === 0) {
+                    return item.type === 'Sale';
+                } else if (value === 1) {
+                    return item.type === 'Wanted';
+                } else if (value === 2) {
+                    return item.type === 'Academic';
+                }
+                return false;
+            });
+            setAdData(filteredByType);
+            setFilteredAdData(filteredByType);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+
 
         fetchData();
     }, [value]);
@@ -188,7 +205,7 @@ function ViewAds() {
 
             {[0, 1, 2].map((index) => (
                 <TabPanel index={index} value={value}>
-                    <AdsCardGrid adsList={filteredAdData} openMessage={OpenMessageToUser} columnNum={columnNum} />
+                    <AdsCardGrid adsList={filteredAdData} openMessage={OpenMessageToUser} closeAd={CloseUserAd} columnNum={columnNum} userId={0} />
                 </TabPanel>
             ))}
 

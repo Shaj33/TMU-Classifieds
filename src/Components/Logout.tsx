@@ -19,6 +19,7 @@ const Logout: React.FC<LogoutProps> = ({ onLogout }) => {
       // Clear authentication data from local storage
       localStorage.removeItem('username')
       localStorage.removeItem('token');
+      localStorage.removeItem('userId')
 
       // Call the onLogout function passed from the parent component
       onLogout();
