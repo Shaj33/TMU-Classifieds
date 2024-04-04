@@ -6,13 +6,16 @@ import tempfile
 from faker import Faker
 from faker.providers import currency
 from faker_file.providers.png_file import GraphicPngFileProvider
-from dotenv import dotenv_values
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 fake = Faker()
 fake.add_provider(currency)
 fake.add_provider(GraphicPngFileProvider)
 
-db_password = dotenv_values(".env")["DB_PASSWORD"]
+db_password = os.getenv("DB_PASSWORD")
 client = pymongo.MongoClient(f"mongodb+srv://cpsproj630:{db_password}@maindb.aurr4bv.mongodb.net/?retryWrites=true&w=majority&appName=mainDB")
 client.drop_database('mainDB')
 
@@ -140,7 +143,7 @@ for _ in range(20):
         'location': fake.address(),
         'date': fake.date_time_this_decade(before_now=True, after_now=False).strftime("%B %d, %Y"),
         'price': fake.pricetag(),  # Random price
-        'picture': base64.b64encode(png_data).decode('utf-8') if fake.boolean() else None,
+        'picture': f"data:image/png;base64,{base64.b64encode(png_data).decode('utf-8')}" if fake.boolean() else None,
         'is_open': fake.boolean(chance_of_getting_true=80),
     }
     ads.insert_one(ad)
