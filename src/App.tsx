@@ -9,6 +9,8 @@ import {
 } from "react-router-dom";
 import Home from './MainPage/Home';
 import NewPost from './NewPostPage/NewPost';
+import Login from './Components/Login';
+import SignUp from './Components/SignUp';
 import ViewAds from './ViewAdsPage/ViewAds';
 import Communication from './CommunicationPage/Communication';
 
@@ -37,6 +39,14 @@ function App(): JSX.Element {
               element={<NewPost />}
             ></Route>
             <Route
+              path="/login"
+              element={<Login />}
+            ></Route>
+            <Route
+              path="/signup"
+              element={<SignUp />}
+            ></Route>
+            <Route
               path='/viewAds'
               element={<ViewAds />}>
             </Route>
@@ -47,7 +57,6 @@ function App(): JSX.Element {
           </Routes>
         </SideWindow>
       </Router>
-
     </MainWindow>
   );
 }
