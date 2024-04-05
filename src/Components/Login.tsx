@@ -18,7 +18,7 @@ const Login: React.FC = () => {
         return;
       }
 
-      const response = await axios.post('http://localhost/app/login/', { 'username': username, 'password': password });
+      const response = await axios.post('https://tmu-classifieds.onrender.com/app/login/', { 'username': username, 'password': password });
       const { token, username: loggedInUsername, userId } = response.data; // Extract username from response
 
       // Store username in local storage or state for later use (optional)
