@@ -28,7 +28,7 @@ export default function AdminDashboard() {
     const fetchAds = async () => {
         try {
             const response = await fetch(
-                "http://127.0.0.1:8000/app/get_all_ad_listings"
+                "http://127.0.0.1:8000/app/get_all_ad_listings/"
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch data");

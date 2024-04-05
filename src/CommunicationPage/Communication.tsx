@@ -54,7 +54,7 @@ const Communication = (): JSX.Element => {
 
     const fetchMessages = () => {
         console.log(friendId)
-        fetch(`http://127.0.0.1:8000/app/get_msgs_list?userId=${userId}&friendId=${friendId}&postId=${postId}`)
+        fetch(`http://127.0.0.1:8000/app/get_msgs_list/?userId=${userId}&friendId=${friendId}&postId=${postId}`)
             .then((response: any) => response.json())
             .then((data: any) => {
                 console.log(data)
@@ -70,7 +70,7 @@ const Communication = (): JSX.Element => {
     }
 
     const fetchPost = () => {
-        fetch(`http://127.0.0.1:8000/app/get_single_ad_listing?userId=${userId}&postId=${postId}`)
+        fetch(`http://127.0.0.1:8000/app/get_single_ad_listing/?userId=${userId}&postId=${postId}`)
             .then((response: any) => response.json())
             .then((data: any) => {
                 setPostTitle(data.title)
@@ -118,7 +118,7 @@ const Communication = (): JSX.Element => {
             })
         }
 
-        fetch(`http://127.0.0.1:8000/app/send_txt_message`, postOptions)
+        fetch(`http://127.0.0.1:8000/app/send_txt_message/`, postOptions)
             .then(async (response) => fetchMessages())
 
         setTextContent('')
