@@ -24,5 +24,5 @@ catchall = TemplateView.as_view(template_name='index.html')
 urlpatterns = [
     path('app/', include('app.urls')),
     path('admin/', admin.site.urls),
-    re_path('.', catchall),
+    re_path('', catchall),
 ]
