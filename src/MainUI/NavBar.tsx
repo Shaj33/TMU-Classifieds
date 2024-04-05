@@ -35,7 +35,7 @@ function NavBar(): JSX.Element {
     useEffect(() => {
         const fetchIfUserIsStaff = async () => {
             try {
-                const response = await fetch(`https://tmu-classifieds.onrender.com/app/get_is_user_staff/?userId=${localStorage.getItem('token')}`);
+                const response = await fetch(`https://cps-630-cps630.koyeb.app/app/get_is_user_staff/?userId=${localStorage.getItem('token')}`);
 
                 if (!response.ok) {
                     throw new Error("Server responded with status: " + response.status);

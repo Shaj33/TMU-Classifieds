@@ -13,7 +13,7 @@ export default function AdminDashboard() {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch("https://tmu-classifieds.onrender.com/app/get_all_users/");
+            const response = await fetch("https://cps-630-cps630.koyeb.app/app/get_all_users/");
             if (!response.ok) {
                 throw new Error("Failed to fetch data");
             }
@@ -28,7 +28,7 @@ export default function AdminDashboard() {
     const fetchAds = async () => {
         try {
             const response = await fetch(
-                "https://tmu-classifieds.onrender.com/app/get_all_ad_listings/"
+                "https://cps-630-cps630.koyeb.app/app/get_all_ad_listings/"
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch data");
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
 
     const handleUserDelete = async (userId: string) => {
         try {
-            const response = await fetch(`https://tmu-classifieds.onrender.com/app/delete_user/${userId}/`, {
+            const response = await fetch(`https://cps-630-cps630.koyeb.app/app/delete_user/${userId}/`, {
                 method: 'DELETE'
             });
 
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
 
     const handleAdClose = async (adId: string) => {
         try {
-            const response = await fetch(`https://tmu-classifieds.onrender.com/app/close_ad/${adId}/`, {
+            const response = await fetch(`https://cps-630-cps630.koyeb.app/app/close_ad/${adId}/`, {
                 method: 'PUT'
             });
 
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
 
     const handleAdDelete = async (adId: string) => {
         try {
-            const response = await fetch(`https://tmu-classifieds.onrender.com/app/delete_ad/${adId}/`, {
+            const response = await fetch(`https://cps-630-cps630.koyeb.app/app/delete_ad/${adId}/`, {
                 method: 'DELETE'
             });
 
