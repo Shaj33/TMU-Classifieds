@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True, validators=[RegexValidator(regex='@torontomu\.ca$',
+    email = models.EmailField(unique=True, validators=[RegexValidator(regex=r'@torontomu\.ca$',
                                 message='Email must end with @torontomu.ca')])
     
     # Provide unique related_name attributes for the groups and user_permissions fields
