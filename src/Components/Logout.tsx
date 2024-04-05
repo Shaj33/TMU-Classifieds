@@ -14,7 +14,7 @@ const Logout: React.FC<LogoutProps> = ({ onLogout }) => {
     try {
       const token = localStorage.getItem('token'); // Retrieve token from local storage
 
-      await axios.post('http://localhost:8000/app/logout/', { token }); // Send logout request to backend
+      await axios.post('https://tmu-classifieds.onrender.com/app/logout/', { token }); // Send logout request to backend
 
       // Clear authentication data from local storage
       localStorage.removeItem('username')

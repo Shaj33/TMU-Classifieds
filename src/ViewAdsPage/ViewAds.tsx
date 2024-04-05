@@ -80,7 +80,7 @@ function ViewAds() {
 
     const CloseUserAd = (ad: any) => {
         try {
-            const response = fetch(`http://127.0.0.1:8000/app/close_ad/${ad.id}/`, {
+            const response = fetch(`https://tmu-classifieds.onrender.com/app/close_ad/${ad.id}/`, {
                 method: 'PUT'
             })
                 .then(response => response.json())
@@ -94,7 +94,7 @@ function ViewAds() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/app/get_all_ad_listings/');
+            const response = await fetch('https://tmu-classifieds.onrender.com/app/get_all_ad_listings/');
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }

@@ -39,7 +39,7 @@ const ChatList = (props: { closeMenu: React.Dispatch<React.SetStateAction<boolea
     
     useEffect(() => {
 
-        fetch(`http://127.0.0.1:8000/app/get_most_recent_all/?userId=${userId}`)
+        fetch(`https://tmu-classifieds.onrender.com/app/get_most_recent_all/?userId=${userId}`)
             .then((response: any) => response.json())
             .then((data: any) => {
                 console.log(data)

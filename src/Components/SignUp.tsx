@@ -32,7 +32,7 @@ const SignUp: React.FC = () => {
 
       const response = await axios({
         method: "post",
-        url: "http://localhost:8000/app/register/",
+        url: "https://tmu-classifieds.onrender.com/app/register/",
         data: form,
         headers: { "Content-Type": "multipart/form-data" },
       });
