@@ -11,6 +11,7 @@ export default function AdminDashboard() {
     const [users, setUsers] = useState<[]>([]);
     const [ads, setAds] = useState<[]>([]);
 
+    // Function to get all users
     const fetchUsers = async () => {
         try {
             const response = await fetch("http://127.0.0.1:8000/app/get_all_users/");
@@ -25,6 +26,7 @@ export default function AdminDashboard() {
         }
     };
 
+    // Function to get all ads
     const fetchAds = async () => {
         try {
             const response = await fetch(
@@ -46,6 +48,7 @@ export default function AdminDashboard() {
         fetchAds();
     }, []);
 
+    // Function for admin to delete user 
     const handleUserDelete = async (userId: string) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/app/delete_user/${userId}/`, {
@@ -68,7 +71,7 @@ export default function AdminDashboard() {
         }
     };
 
-
+    // Function for admin to close ad
     const handleAdClose = async (adId: string) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/app/close_ad/${adId}/`, {
@@ -91,6 +94,7 @@ export default function AdminDashboard() {
         }
     };
 
+    // Function for admin to delete ad
     const handleAdDelete = async (adId: string) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/app/delete_ad/${adId}/`, {

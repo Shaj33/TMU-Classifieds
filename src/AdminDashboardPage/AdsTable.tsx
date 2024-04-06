@@ -24,16 +24,18 @@ type AdsTableProps = {
     handleAdDelete: (adId: string) => void;
 };
 
-
+// Ads table for admin
 export default function AdsTable({ adsList, handleAdClose, handleAdDelete }: AdsTableProps) {
     const [open, setOpen] = useState(false);
     const [currentAdId, setCurrentAdId] = useState('');
 
+    // Handles admin opening an ad
     const handleClickOpen = (adId: string) => {
         setCurrentAdId(adId);
         setOpen(true);
     };
 
+    // Handles admin closing an add
     const handleClose = (deleteAd: boolean) => {
         if (deleteAd) {
             handleAdDelete(currentAdId);
