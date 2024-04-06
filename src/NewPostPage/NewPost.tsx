@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useCities } from '../Contexts/CitiesProvider';
 
 
 
@@ -25,38 +26,9 @@ function NewPost(): JSX.Element {
     const [price, setPrice] = useState('');
     const [priceAvailable, setPriceAvailable] = useState(true);
     const [picture, setPicture] = useState('');
-    const [cities, setCities] = useState<string[]>([]);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [fileName, setFileName] = useState<string>('No file chosen');
-
-    useEffect(() => {
-        fetchCities();
-    }, []);
-
-    // Function to get list of cities in Ontario using API
-    const fetchCities = async () => {
-        try {
-            const response = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    country: 'Canada',
-                    state: 'Ontario'
-                })
-            });
-            if (response.ok) {
-                const data = await response.json();
-                const cityNames = data.data || [];
-                setCities(cityNames);
-            } else {
-                console.error('Failed to fetch city data');
-            }
-        } catch (error) {
-            console.error('Error fetching city data:', error);
-        }
-    };
+    const cities = useCities();
 
     // Function to format the date
     function getFormattedDate() {

@@ -32,7 +32,7 @@ const SignUp: React.FC = () => {
 
       const response = await axios({
         method: "post",
-        url: "http://localhost:8000/app/register/",
+        url: "http://127.0.0.1:8000/app/register/",
         data: form,
         headers: { "Content-Type": "multipart/form-data" },
       });

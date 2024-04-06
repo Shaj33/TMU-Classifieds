@@ -15,6 +15,7 @@ import FilterButton, { AdFilterOptions } from './FilterButton';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
 import { setFriendId, setPostId } from '../store/messagesSlice';
+import { useCities } from '../Contexts/CitiesProvider';
 
 type SearchBarProps = {
     setSearch: React.Dispatch<React.SetStateAction<string>>,
@@ -58,7 +59,6 @@ function ViewAds() {
     const [value, setValue] = useState(0);
     const [adData, setAdData] = useState<any[]>([]);
     const [searchValue, setSearchValue] = useState('');
-    const [cities, setCities] = useState<string[]>([]);
     const [filterValues, setFilterValues] = useState<AdFilterOptions>({
         city: '',
         dateBefore: '',
@@ -68,6 +68,8 @@ function ViewAds() {
     });
 
     const [filteredAdData, setFilteredAdData] = useState<any[]>([]);
+
+    const cities = useCities();
 
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
@@ -94,12 +96,11 @@ function ViewAds() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8000/app/get_all_ad_listings');
+            const response = await fetch('http://127.0.0.1:8000/app/get_all_ad_listings/');
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
             const jsonData = await response.json();
-            console.log(jsonData)
 
             // reset filter values when switching between tabs
             setFilterValues({
@@ -129,35 +130,6 @@ function ViewAds() {
             console.error('Error fetching data:', error);
         }
     };
-
-    // function to get list of cities in Ontario using API
-    const fetchCities = async () => {
-        try {
-            const response = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    country: 'Canada',
-                    state: 'Ontario'
-                })
-            });
-            if (response.ok) {
-                const data = await response.json();
-                const cityNames = data.data || []; // Assuming the response data has a 'data' field containing city names
-                setCities(cityNames);
-            } else {
-                console.error('Failed to fetch city data');
-            }
-        } catch (error) {
-            console.error('Error fetching city data:', error);
-        }
-    };
-
-    useEffect(() => {
-        fetchCities();
-    }, []);
 
     useEffect(() => {
         fetchData();

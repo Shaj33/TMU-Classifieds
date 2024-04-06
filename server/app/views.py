@@ -16,6 +16,10 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime as dt
 from django.contrib.auth.models import User
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 @api_view(['GET'])
 def hello_world(request):
@@ -276,7 +280,8 @@ def get_single_ad_listing(request):
 
     return JsonResponse(ad, safe=False)
 
-client = pymongo.MongoClient('mongodb://localhost:27017/mainDB')
+db_password = os.getenv("DB_PASSWORD")
+client = pymongo.MongoClient(f"mongodb://localhost:27017/mainDB")
 #Define DB Name
 dbname = client['mainDB']
 
@@ -301,15 +306,3 @@ def add_user(request):
 
 msgList = dbname['messages']
 
-
-mascot_1={
-    'id': 1,
-    "Name": "Sammy"
-}
-
-collection.insert_one(mascot_1)
-
-user_details = collection.find({})
-
-for r in user_details:
-    print(r['Name'])

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Logout from '../Components/Logout';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,12 +14,12 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { Navigate } from 'react-router-dom';
 
 
 function NavBar(): JSX.Element {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem('token')); // Check if token exists in local storage
     const [isUserStaff, setIsUserStaff] = useState(false);
-
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -60,7 +59,9 @@ function NavBar(): JSX.Element {
 
     const handleLogout = () => {
         // Clear authentication data from local storage
+        localStorage.removeItem('username')
         localStorage.removeItem('token');
+        localStorage.removeItem('userId')
         // Update isLoggedIn state
         setIsLoggedIn(false);
         setIsUserStaff(false);

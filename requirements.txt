@@ -11,3 +11,4 @@ Faker==24.3.0
 faker-file==0.17.11
 imgkit==1.2.3
 pillow==10.2.0
+python-dotenv==1.0.1

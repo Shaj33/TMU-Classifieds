@@ -30,7 +30,7 @@ export default function AdminDashboard() {
     const fetchAds = async () => {
         try {
             const response = await fetch(
-                "http://127.0.0.1:8000/app/get_all_ad_listings"
+                "http://127.0.0.1:8000/app/get_all_ad_listings/"
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch data");
@@ -116,6 +116,14 @@ export default function AdminDashboard() {
             console.error("Error deleting ad:", error);
         }
     };
+
+      // Returns a Please Login Page if User is not logged in
+    if (!localStorage.getItem('userId')) return (
+        <div>
+            <h1>Please Log In</h1>
+        </div>
+
+    )
 
     return (
         <Box sx={{ flexGrow: 1 }}>
