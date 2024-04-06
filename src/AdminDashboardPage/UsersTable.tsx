@@ -22,11 +22,12 @@ type UsersTableProps = {
     handleUserDelete: (userId: string) => void;
 };
 
+// User table for admin
 export default function UsersTable({ usersList, handleUserDelete }: UsersTableProps) {
 
     const [open, setOpen] = useState(false);
     const [currentUserId, setCurrentUserId] = useState('');
-
+    
     const handleClickOpen = (userId: string) => {
         setCurrentUserId(userId);
         setOpen(true);
