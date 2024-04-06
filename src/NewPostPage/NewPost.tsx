@@ -70,7 +70,7 @@ function NewPost(): JSX.Element {
             })
         }
 
-        fetch(`https://cps-630-cps630.koyeb.app/app/post_ad/`, postOptions)
+        fetch(`http://127.0.0.1:8000/app/post_ad/`, postOptions)
             .then(async (response) => {
                 if (response.ok) {
                     setShowSuccessAlert(true); // Show the success alert if post was created successfully

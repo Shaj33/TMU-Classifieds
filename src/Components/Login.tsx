@@ -18,7 +18,7 @@ const Login: React.FC = () => {
         return;
       }
 
-      const response = await axios.post('https://cps-630-cps630.koyeb.app/app/login/', { 'username': username, 'password': password });
+      const response = await axios.post('http://127.0.0.1:8000/app/login/', { 'username': username, 'password': password });
       const { token, username: loggedInUsername, userId } = response.data; // Extract username from response
 
       // Store username in local storage or state for later use (optional)

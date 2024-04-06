@@ -281,7 +281,7 @@ def get_single_ad_listing(request):
     return JsonResponse(ad, safe=False)
 
 db_password = os.getenv("DB_PASSWORD")
-client = pymongo.MongoClient(f"mongodb+srv://cpsproj630:{db_password}@maindb.aurr4bv.mongodb.net/?retryWrites=true&w=majority&appName=mainDB")
+client = pymongo.MongoClient(f"mongodb://localhost:27017/mainDB")
 #Define DB Name
 dbname = client['mainDB']
 
@@ -306,15 +306,3 @@ def add_user(request):
 
 msgList = dbname['messages']
 
-
-mascot_1={
-    'id': 1,
-    "Name": "Sammy"
-}
-
-# collection.insert_one(mascot_1)
-
-user_details = collection.find({})
-
-for r in user_details:
-    print(r['Name'])
